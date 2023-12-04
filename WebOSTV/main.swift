@@ -7,5 +7,6 @@
 
 import Foundation
 
-print("Hello, World!")
-
+let webOSClient = WebOSClient(url: URL(string: "wss://192.168.8.10:3001"))
+webOSClient.connect()
+dispatchMain()
