@@ -7,17 +7,38 @@
 
 import Foundation
 
-struct WebOSRequestResponse: Codable {
-    var type: String = "register"
+struct WebOSRequest: Codable {
+    var type: String
     var id: String
     var uri: String?
-    var payload: WebOSRequestResponsePayload = WebOSRequestResponsePayload()
+    var payload: WebOSRequestPayload?
 }
 
-struct WebOSRequestResponsePayload: Codable {
-    var forcePairing: Bool = false
-    var manifest: WebOSRequestManifest = WebOSRequestManifest()
-    var pairingType: String = "PROMPT"
+struct WebOSResponse: Codable {
+    var type: String?
+    var id: String
+    var error: String?
+    var payload: WebOSResponsePayload?
+}
+
+struct WebOSResponsePayload: Codable {
+    var pairingType: String?
+    var returnValue: Bool?
+    var clientKey: String?
+    var toastId: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case pairingType
+        case returnValue
+        case clientKey = "client-key"
+        case toastId
+    }
+}
+
+struct WebOSRequestPayload: Codable {
+    var forcePairing: Bool?
+    var manifest: WebOSRequestManifest?
+    var pairingType: String?
     var clientKey: String?
     var message: String?
     var iconData: Data?
