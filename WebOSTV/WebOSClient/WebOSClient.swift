@@ -60,7 +60,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         )
         let request = WebOSRequest(
             type: "request",
-            id: id,
+            //id: id,
             uri: "ssap://system.notifications/createToast",
             payload: payload
         )
@@ -84,11 +84,21 @@ private extension WebOSClient {
             pairingType: "PROMPT",
             clientKey: clientKey
         )
-        return .init(type: "register", id: id, payload: payload)
+        return .init(type: "register", payload: payload)
     }
     
     func send(_ request: Codable) {
         guard let requestJSON = request.toJSONString() else { return }
+        let message = URLSessionWebSocketTask.Message.string(requestJSON)
+        webSocketTask?.send(message) { error in
+            if let error = error {
+                print(error)
+            }
+        }
+    }
+    
+    func send(_ target: WebOSTarget) {
+        guard let requestJSON = target.request.toJSONString() else { return }
         let message = URLSessionWebSocketTask.Message.string(requestJSON)
         webSocketTask?.send(message) { error in
             if let error = error {

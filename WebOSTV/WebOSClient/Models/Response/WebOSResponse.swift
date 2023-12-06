@@ -9,7 +9,7 @@ import Foundation
 
 struct WebOSResponse: Codable {
     var type: String?
-    var id: String
+    //var id: String
     var error: String?
     var payload: WebOSResponsePayload?
 }

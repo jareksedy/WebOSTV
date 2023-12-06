@@ -14,10 +14,10 @@ class Application {
         webOSClient.delegate = self
         let clientKey = UserDefaults.standard.value(forKey: "clientKey") as? String
         webOSClient.connect(with: clientKey)
-        
         while let input = readLine(), input != "exit" {
             self.webOSClient.toast(message: input, iconData: nil, iconExtension: nil)
         }
+        webOSClient.disconnect(with: .goingAway)
     }
 }
 
@@ -38,7 +38,15 @@ extension Application: WebOSClientDelegate {
             return
         }
         
-        //print(response)
+        print(response!)
+    }
+    
+    func didDisconnect(
+        with error: Error?,
+        closeCode: URLSessionWebSocketTask.CloseCode?,
+        reason: Data?
+    ) {
+        print("DISCONNECTED WITH: \(closeCode.debugDescription).")
     }
 }
 
