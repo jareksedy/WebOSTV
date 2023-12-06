@@ -33,8 +33,8 @@ extension Application: WebOSClientDelegate {
     }
     
     func didReceive(response: Codable?, error: Error?) {
-        guard let response else {
-            print(error ?? "Unknown error.")
+        if let error {
+            print(error)
             return
         }
         

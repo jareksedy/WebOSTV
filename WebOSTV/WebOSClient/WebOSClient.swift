@@ -22,25 +22,23 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     private var urlSession: URLSession?
     private var webSocketTask: URLSessionWebSocketTask?
     private var id: String = UUID().uuidString
-    
     weak var delegate: WebOSClientDelegate?
     
     init(url: URL?) {
         super.init()
-        
         guard let url else {
             assertionFailure("Device URL is nil. Terminating...")
             return
         }
-        
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         webSocketTask = urlSession?.webSocketTask(with: url)
         webSocketTask?.resume()
     }
     
     func connect(with clientKey: String?) {
-        send(makeRegistrationRequest(clientKey: clientKey))
-        listenForClientKey { [weak self] result in
+        let request = makeRequestRegister(clientKey: clientKey)
+        send(request)
+        listenRecursively { [weak self] result in
             switch result {
             case .success(let response): 
                 self?.delegate?.didConnect(with: response.payload?.clientKey, error: nil)
@@ -67,7 +65,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
             payload: payload
         )
         send(request)
-        listen { [weak self] result in
+        listenOnce { [weak self] result in
             switch result {
             case .success(let response):
                 self?.delegate?.didReceive(response: response, error: nil)
@@ -79,7 +77,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
 }
 
 private extension WebOSClient {
-    func makeRegistrationRequest(clientKey: String?) -> WebOSRequest {
+    func makeRequestRegister(clientKey: String?) -> WebOSRequest {
         let payload = WebOSRequestPayload(
             forcePairing: false,
             manifest: WebOSRequestManifest(),
@@ -99,14 +97,14 @@ private extension WebOSClient {
         }
     }
     
-    func listen(
+    func listenOnce(
         completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) {
         webSocketTask?.receive { [weak self] result in
             switch result {
             case .success(let response):
                 do {
-                    let webOSResponse = try self?.decodeRegistrationResponse(from: response)
+                    let webOSResponse = try self?.decodeResponse(from: response)
                     try self?.handleResponse(webOSResponse, completion: completion)
                 } catch {
                     completion(.failure(error))
@@ -117,15 +115,15 @@ private extension WebOSClient {
         }
     }
     
-    func listenForClientKey(
+    func listenRecursively(
         completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) {
         webSocketTask?.receive { [weak self] result in
             switch result {
             case .success(let response):
                 do {
-                    let webOSResponse = try self?.decodeRegistrationResponse(from: response)
-                    try self?.handleRegistrationResponse(webOSResponse, completion: completion)
+                    let webOSResponse = try self?.decodeResponse(from: response)
+                    try self?.handleResponseRegister(webOSResponse, completion: completion)
                 } catch {
                     completion(.failure(error))
                 }
@@ -135,7 +133,7 @@ private extension WebOSClient {
         }
     }
     
-    func decodeRegistrationResponse(
+    func decodeResponse(
         from response: URLSessionWebSocketTask.Message
     ) throws -> WebOSResponse? {
         switch response {
@@ -169,7 +167,7 @@ private extension WebOSClient {
         }
     }
     
-    func handleRegistrationResponse(
+    func handleResponseRegister(
         _ webOSResponse: WebOSResponse?,
         completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) throws {
@@ -184,7 +182,7 @@ private extension WebOSClient {
             let errorMessage = webOSResponse?.error ?? "Unknown error"
             completion(.failure(NSError(domain: errorMessage, code: 0, userInfo: nil)))
         default:
-            listenForClientKey(completion: completion)
+            listenRecursively(completion: completion)
         }
     }
 }
