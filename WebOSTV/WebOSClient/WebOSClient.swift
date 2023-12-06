@@ -27,7 +27,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     init(url: URL?) {
         super.init()
         guard let url else {
-            assertionFailure("Device URL is nil. Terminating...")
+            assertionFailure("Device URL is nil. Terminating.")
             return
         }
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
