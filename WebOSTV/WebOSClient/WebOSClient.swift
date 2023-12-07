@@ -8,7 +8,8 @@
 import Foundation
 
 protocol WebOSClientProtocol {
-    func send(_ target: WebOSTarget) -> String?
+    var delegate: WebOSClientDelegate? { get set }
+    @discardableResult func send(_ target: WebOSTarget) -> String?
     func disconnect(with closeCode: URLSessionWebSocketTask.CloseCode)
 }
 

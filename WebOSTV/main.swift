@@ -8,7 +8,11 @@
 import Foundation
 
 class Application {
-    let webOSClient = WebOSClient(url: URL(string: "wss://192.168.8.10:3001"))
+    var webOSClient: WebOSClientProtocol
+    
+    init(webOSClient: WebOSClientProtocol) {
+        self.webOSClient = webOSClient
+    }
     
     func run() {
         webOSClient.delegate = self
@@ -39,6 +43,7 @@ extension Application: WebOSClientDelegate {
     }
 }
 
-let application = Application()
+let webOSClient = WebOSClient(url: URL(string: "wss://192.168.8.10:3001"))
+let application = Application(webOSClient: webOSClient)
 application.run()
 
