@@ -36,8 +36,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     }
     
     func connect(with clientKey: String?) {
-        let request = makeRequestRegister(clientKey: clientKey)
-        send(request)
+        send(.connect(clientKey: clientKey))
         listenRecursively { [weak self] result in
             switch result {
             case .success(let response): 
@@ -53,18 +52,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     }
     
     func toast(message: String, iconData: Data?, iconExtension: String?) {
-        let payload = WebOSRequestPayload(
-            message: message,
-            iconData: iconData,
-            iconExtension: iconExtension
-        )
-        let request = WebOSRequest(
-            type: "request",
-            //id: id,
-            uri: "ssap://system.notifications/createToast",
-            payload: payload
-        )
-        send(request)
+        send(.createToast(message: message, iconData: iconData, iconExtension: iconExtension))
         listenOnce { [weak self] result in
             switch result {
             case .success(let response):
@@ -77,16 +65,6 @@ class WebOSClient: NSObject, WebOSClientProtocol {
 }
 
 private extension WebOSClient {
-    func makeRequestRegister(clientKey: String?) -> WebOSRequest {
-        let payload = WebOSRequestPayload(
-            forcePairing: false,
-            manifest: WebOSRequestManifest(),
-            pairingType: "PROMPT",
-            clientKey: clientKey
-        )
-        return .init(type: "register", payload: payload)
-    }
-    
     func send(_ request: Codable) {
         guard let requestJSON = request.toJSONString() else { return }
         let message = URLSessionWebSocketTask.Message.string(requestJSON)
@@ -97,14 +75,17 @@ private extension WebOSClient {
         }
     }
     
-    func send(_ target: WebOSTarget) {
-        guard let requestJSON = target.request.toJSONString() else { return }
-        let message = URLSessionWebSocketTask.Message.string(requestJSON)
+    @discardableResult
+    func send(_ target: WebOSTarget) -> String? {
+        let request = target.request
+        guard let json = request.toJSONString() else { return nil }
+        let message = URLSessionWebSocketTask.Message.string(json)
         webSocketTask?.send(message) { error in
             if let error = error {
                 print(error)
             }
         }
+        return request.id
     }
     
     func listenOnce(

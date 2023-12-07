@@ -31,6 +31,7 @@ extension WebOSTarget: WebOSTargetProtocol {
             return "ssap://system.notifications/createToast"
         }
     }
+    
     var request: WebOSRequest {
         switch self {
         case .connect(let clientKey):
@@ -40,14 +41,14 @@ extension WebOSTarget: WebOSTargetProtocol {
                 pairingType: "PROMPT",
                 clientKey: clientKey
             )
-            return .init(type: "request", payload: payload)
+            return .init(type: "request", id: uuid, payload: payload)
         case .createToast(let message, let iconData, let iconExtension):
             let payload = WebOSRequestPayload(
                 message: message,
                 iconData: iconData,
                 iconExtension: iconExtension
             )
-            return .init(type: "request", uri: uri, payload: payload)
+            return .init(type: "request", id: uuid, uri: uri, payload: payload)
         }
     }
 }
