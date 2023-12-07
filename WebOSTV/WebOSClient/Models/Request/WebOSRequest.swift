@@ -9,7 +9,7 @@ import Foundation
 
 struct WebOSRequest: Codable {
     var type: String
-    var id: String
+    var id: String?
     var uri: String?
     var payload: WebOSRequestPayload?
 }
