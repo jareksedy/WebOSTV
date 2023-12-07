@@ -21,7 +21,7 @@ enum WebOSTarget {
 
 extension WebOSTarget: WebOSTargetProtocol {
     var uuid: String {
-        return UUID().uuidString
+        return UUID().uuidString.lowercased()
     }
     
     var uri: String? {
