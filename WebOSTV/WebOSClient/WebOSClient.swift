@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol WebOSClientProtocol {
+protocol WebOSClientType {
     var delegate: WebOSClientDelegate? { get set }
     @discardableResult func send(_ target: WebOSTarget) -> String?
     func disconnect(with closeCode: URLSessionWebSocketTask.CloseCode)
@@ -17,7 +17,7 @@ protocol WebOSClientDelegate: AnyObject {
     func didReceive(_ result: Result<WebOSResponse, Error>)
 }
 
-class WebOSClient: NSObject, WebOSClientProtocol {
+class WebOSClient: NSObject, WebOSClientType {
     private var urlSession: URLSession?
     private var webSocketTask: URLSessionWebSocketTask?
     weak var delegate: WebOSClientDelegate?

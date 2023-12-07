@@ -8,9 +8,9 @@
 import Foundation
 
 class Application {
-    var webOSClient: WebOSClientProtocol
+    var webOSClient: WebOSClientType
     
-    init(webOSClient: WebOSClientProtocol) {
+    init(webOSClient: WebOSClientType) {
         self.webOSClient = webOSClient
     }
     

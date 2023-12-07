@@ -7,19 +7,19 @@
 
 import Foundation
 
-protocol WebOSTargetProtocol {
+protocol WebOSTargetType {
     var uuid: String { get }
     var uri: String? { get }
     var request: WebOSRequest { get }
     var json: String? { get }
 }
 
-enum WebOSTarget {
+enum WebOSTarget: WebOSTargetType {
     case connect(clientKey: String?)
     case createToast(message: String, iconData: Data? = nil, iconExtension: String? = nil)
 }
 
-extension WebOSTarget: WebOSTargetProtocol {
+extension WebOSTarget {
     var uuid: String {
         return UUID().uuidString.lowercased()
     }
