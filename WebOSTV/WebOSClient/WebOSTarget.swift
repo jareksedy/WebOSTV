@@ -11,11 +11,12 @@ protocol WebOSTargetProtocol {
     var uuid: String { get }
     var uri: String? { get }
     var request: WebOSRequest { get }
+    var json: String? { get }
 }
 
 enum WebOSTarget {
     case connect(clientKey: String?)
-    case createToast(message: String, iconData: Data?, iconExtension: String?)
+    case createToast(message: String, iconData: Data? = nil, iconExtension: String? = nil)
 }
 
 extension WebOSTarget: WebOSTargetProtocol {
@@ -25,10 +26,10 @@ extension WebOSTarget: WebOSTargetProtocol {
     
     var uri: String? {
         switch self {
-        case .connect:
-            return nil
         case .createToast:
             return "ssap://system.notifications/createToast"
+        default:
+            return nil
         }
     }
     
@@ -41,7 +42,7 @@ extension WebOSTarget: WebOSTargetProtocol {
                 pairingType: "PROMPT",
                 clientKey: clientKey
             )
-            return .init(type: "request", id: uuid, payload: payload)
+            return .init(type: "register", id: uuid, payload: payload)
         case .createToast(let message, let iconData, let iconExtension):
             let payload = WebOSRequestPayload(
                 message: message,
@@ -50,5 +51,16 @@ extension WebOSTarget: WebOSTargetProtocol {
             )
             return .init(type: "request", id: uuid, uri: uri, payload: payload)
         }
+    }
+    
+    var json: String? {
+        let encoder = JSONEncoder()
+        do {
+            let jsonData = try encoder.encode(request)
+            if let jsonString = String(data: jsonData, encoding: .utf8) { return jsonString }
+        } catch {
+            print("Error encoding JSON: \(error)")
+        }
+        return nil
     }
 }

@@ -8,20 +8,17 @@
 import Foundation
 
 protocol WebOSClientProtocol {
-    func connect(with clientKey: String?)
+    func send(_ target: WebOSTarget) -> String?
     func disconnect(with closeCode: URLSessionWebSocketTask.CloseCode)
-    func toast(message: String, iconData: Data?, iconExtension: String?)
 }
 
 protocol WebOSClientDelegate: AnyObject {
-    func didConnect(with clientKey: String?, error: Error?)
-    func didReceive(response: Codable?, error: Error?)
+    func didReceive(_ result: Result<WebOSResponse, Error>)
 }
 
 class WebOSClient: NSObject, WebOSClientProtocol {
     private var urlSession: URLSession?
     private var webSocketTask: URLSessionWebSocketTask?
-    private var id: String = UUID().uuidString
     weak var delegate: WebOSClientDelegate?
     
     init(url: URL?) {
@@ -33,147 +30,63 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         webSocketTask = urlSession?.webSocketTask(with: url)
         webSocketTask?.resume()
-    }
-    
-    func connect(with clientKey: String?) {
-        send(.connect(clientKey: clientKey))
-        listenRecursively { [weak self] result in
-            switch result {
-            case .success(let response): 
-                self?.delegate?.didConnect(with: response.payload?.clientKey, error: nil)
-            case .failure(let error):
-                self?.delegate?.didConnect(with: nil, error: error)
-            }
-        }
-    }
-    
-    func disconnect(with closeCode: URLSessionWebSocketTask.CloseCode = .goingAway) {
-        webSocketTask?.cancel(with: closeCode, reason: nil)
-    }
-    
-    func toast(message: String, iconData: Data?, iconExtension: String?) {
-        send(.createToast(message: message, iconData: iconData, iconExtension: iconExtension))
-        listenOnce { [weak self] result in
-            switch result {
-            case .success(let response):
-                self?.delegate?.didReceive(response: response, error: nil)
-            case .failure(let error):
-                self?.delegate?.didReceive(response: nil, error: error)
-            }
-        }
-    }
-}
-
-private extension WebOSClient {
-    func send(_ request: Codable) {
-        guard let requestJSON = request.toJSONString() else { return }
-        let message = URLSessionWebSocketTask.Message.string(requestJSON)
-        webSocketTask?.send(message) { error in
-            if let error = error {
-                print(error)
-            }
+        listen { [weak self] result in
+            self?.delegate?.didReceive(result)
         }
     }
     
     @discardableResult
     func send(_ target: WebOSTarget) -> String? {
-        let request = target.request
-        guard let json = request.toJSONString() else { return nil }
+        guard let json = target.json else { return nil }
         let message = URLSessionWebSocketTask.Message.string(json)
         webSocketTask?.send(message) { error in
             if let error = error {
                 print(error)
             }
         }
-        return request.id
+        return target.request.id
     }
     
-    func listenOnce(
-        completion: @escaping (Result<WebOSResponse, Error>) -> Void
+    func disconnect(
+        with closeCode: URLSessionWebSocketTask.CloseCode = .goingAway
+    ) {
+        webSocketTask?.cancel(with: closeCode, reason: nil)
+    }
+}
+
+private extension WebOSClient {
+    func listen(
+        _ completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) {
         webSocketTask?.receive { [weak self] result in
             switch result {
             case .success(let response):
                 do {
-                    let webOSResponse = try self?.decodeResponse(from: response)
-                    try self?.handleResponse(webOSResponse, completion: completion)
+                    let webOSResponse = try response.decode()
+                    try self?.handle(webOSResponse, completion: completion)
                 } catch {
                     completion(.failure(error))
                 }
+                self?.listen(completion)
             case .failure(let error):
                 completion(.failure(error))
             }
         }
     }
     
-    func listenRecursively(
-        completion: @escaping (Result<WebOSResponse, Error>) -> Void
-    ) {
-        webSocketTask?.receive { [weak self] result in
-            switch result {
-            case .success(let response):
-                do {
-                    let webOSResponse = try self?.decodeResponse(from: response)
-                    try self?.handleResponseRegister(webOSResponse, completion: completion)
-                } catch {
-                    completion(.failure(error))
-                }
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    func decodeResponse(
-        from response: URLSessionWebSocketTask.Message
-    ) throws -> WebOSResponse? {
-        switch response {
-        case .string(let string):
-            do {
-                return try string.decode()
-            } catch {
-                throw error
-            }
-        case .data:
-            throw NSError(domain: "Unknown response type (binary data)", code: 0, userInfo: nil)
-        @unknown default:
-            throw NSError(domain: "Unknown response type", code: 0, userInfo: nil)
-        }
-    }
-    
-    func handleResponse(
+    func handle(
         _ webOSResponse: WebOSResponse?,
         completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) throws {
         guard let responseType = webOSResponse?.type else {
-            throw NSError(domain: "Response type is missing", code: 0, userInfo: nil)
+            throw NSError(domain: "Unknown response type.", code: 0, userInfo: nil)
         }
-        
         switch responseType {
         case "error":
             let errorMessage = webOSResponse?.error ?? "Unknown error"
             completion(.failure(NSError(domain: errorMessage, code: 0, userInfo: nil)))
         default:
             completion(.success(webOSResponse!))
-        }
-    }
-    
-    func handleResponseRegister(
-        _ webOSResponse: WebOSResponse?,
-        completion: @escaping (Result<WebOSResponse, Error>) -> Void
-    ) throws {
-        guard let responseType = webOSResponse?.type else {
-            throw NSError(domain: "Response type is missing", code: 0, userInfo: nil)
-        }
-        
-        switch responseType {
-        case "registered":
-            completion(.success(webOSResponse!))
-        case "error":
-            let errorMessage = webOSResponse?.error ?? "Unknown error"
-            completion(.failure(NSError(domain: errorMessage, code: 0, userInfo: nil)))
-        default:
-            listenRecursively(completion: completion)
         }
     }
 }

@@ -13,42 +13,32 @@ class Application {
     func run() {
         webOSClient.delegate = self
         let clientKey = UserDefaults.standard.value(forKey: "clientKey") as? String
-        webOSClient.connect(with: clientKey)
+        webOSClient.send(.connect(clientKey: clientKey))
         while let input = readLine(), input != "exit" {
-            self.webOSClient.toast(message: input, iconData: nil, iconExtension: nil)
+            webOSClient.send(.createToast(message: input))
         }
         webOSClient.disconnect(with: .goingAway)
     }
 }
 
 extension Application: WebOSClientDelegate {
-    func didConnect(with clientKey: String?, error: Error?) {
-        guard let clientKey else {
-            print(error ?? "Unknown error.")
-            return
+    func didReceive(_ result: Result<WebOSResponse, Error>) {
+        switch result {
+        case .success(let response):
+            if response.payload?.pairingType == "PROMPT" {
+                print("Please accept connection on the TV.")
+            }
+            if let clientKey = response.payload?.clientKey {
+                print("Connected with client key: \(clientKey)")
+                UserDefaults.standard.setValue(clientKey, forKey: "clientKey")
+            }
+            print(response)
+        case .failure(let error):
+            print("Error received: \(error)")
         }
-        
-        print("CONNECTED. CLIENT KEY: \(clientKey)")
-        UserDefaults.standard.setValue(clientKey, forKey: "clientKey")
-    }
-    
-    func didReceive(response: Codable?, error: Error?) {
-        if let error {
-            print(error)
-            return
-        }
-        
-        print(response!)
-    }
-    
-    func didDisconnect(
-        with error: Error?,
-        closeCode: URLSessionWebSocketTask.CloseCode?,
-        reason: Data?
-    ) {
-        print("DISCONNECTED WITH: \(closeCode.debugDescription).")
     }
 }
 
 let application = Application()
 application.run()
+
