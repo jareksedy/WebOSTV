@@ -16,11 +16,14 @@ class Application {
     
     func run() {
         webOSClient.delegate = self
+        
         let clientKey = UserDefaults.standard.value(forKey: "clientKey") as? String
         webOSClient.send(.connect(clientKey: clientKey))
+        
         while let input = readLine(), input != "exit" {
             webOSClient.send(.createToast(message: input))
         }
+        
         webOSClient.disconnect(with: .goingAway)
     }
 }
@@ -45,7 +48,7 @@ extension Application: WebOSClientDelegate {
     }
 }
 
-let webOSClient = WebOSClient(url: URL(string: "wss://192.168.8.10:3001"))
+let url = URL(string: "wss://192.168.8.10:3001")
+let webOSClient = WebOSClient(url: url)
 let application = Application(webOSClient: webOSClient)
 application.run()
-

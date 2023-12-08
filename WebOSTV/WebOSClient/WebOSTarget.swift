@@ -42,14 +42,14 @@ extension WebOSTarget {
                 pairingType: "PROMPT",
                 clientKey: clientKey
             )
-            return .init(type: "register", id: uuid, payload: payload)
+            return .init(type: .register, id: uuid, payload: payload)
         case .createToast(let message, let iconData, let iconExtension):
             let payload = WebOSRequestPayload(
                 message: message,
                 iconData: iconData,
                 iconExtension: iconExtension
             )
-            return .init(type: "request", id: uuid, uri: uri, payload: payload)
+            return .init(type: .request, id: uuid, uri: uri, payload: payload)
         }
     }
     

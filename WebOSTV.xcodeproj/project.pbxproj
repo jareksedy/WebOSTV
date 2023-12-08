@@ -20,6 +20,7 @@
 		CA9403142B1785AA00260910 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9403132B1785AA00260910 /* main.swift */; };
 		CA94031D2B17864700260910 /* WebOSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA94031C2B17864700260910 /* WebOSClient.swift */; };
 		CAA0AF882B21FAAB00A8E578 /* Message+.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA0AF872B21FAAB00A8E578 /* Message+.swift */; };
+		CAA0AF8A2B2367DF00A8E578 /* RequestType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA0AF892B2367DF00A8E578 /* RequestType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +50,7 @@
 		CA9403132B1785AA00260910 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CA94031C2B17864700260910 /* WebOSClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSClient.swift; sourceTree = "<group>"; };
 		CAA0AF872B21FAAB00A8E578 /* Message+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Message+.swift"; sourceTree = "<group>"; };
+		CAA0AF892B2367DF00A8E578 /* RequestType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +81,6 @@
 			children = (
 				CA30AC5B2B2019CD00254F4F /* WebOSResponse.swift */,
 				CA30AC672B201B1000254F4F /* WebOSResponsePayload.swift */,
-				CA4C2F432B232D5800A218D4 /* ResponseType.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -87,6 +88,8 @@
 		CA76C1982B1AFE72000B451C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CAA0AF892B2367DF00A8E578 /* RequestType.swift */,
+				CA4C2F432B232D5800A218D4 /* ResponseType.swift */,
 				CA30AC5D2B2019D200254F4F /* Request */,
 				CA30AC5E2B2019DA00254F4F /* Response */,
 			);
@@ -205,6 +208,7 @@
 				CA30AC682B201B1000254F4F /* WebOSResponsePayload.swift in Sources */,
 				CA4C2F442B232D5800A218D4 /* ResponseType.swift in Sources */,
 				CA30AC642B201A3D00254F4F /* WebOSRequestSigned.swift in Sources */,
+				CAA0AF8A2B2367DF00A8E578 /* RequestType.swift in Sources */,
 				CA9403142B1785AA00260910 /* main.swift in Sources */,
 				CA76C1A12B1F5931000B451C /* String+.swift in Sources */,
 				CA94031D2B17864700260910 /* WebOSClient.swift in Sources */,
