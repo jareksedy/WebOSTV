@@ -14,6 +14,8 @@ protocol WebOSClientType {
 }
 
 protocol WebOSClientDelegate: AnyObject {
+    func didPrompt()
+    func didConnect(with clientKey: String)
     func didReceive(_ result: Result<WebOSResponse, Error>)
 }
 
@@ -79,15 +81,26 @@ private extension WebOSClient {
         _ webOSResponse: WebOSResponse?,
         completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) throws {
-        guard let responseType = webOSResponse?.type else {
+        guard let response = webOSResponse,
+              let type = response.type,
+              let responseType = ResponseType(rawValue: type) else {
             throw NSError(domain: "Unknown response type.", code: 0, userInfo: nil)
         }
+
         switch responseType {
-        case "error":
-            let errorMessage = webOSResponse?.error ?? "Unknown error"
+        case .registered:
+            if let clientKey = response.payload?.clientKey {
+                delegate?.didConnect(with: clientKey)
+            }
+            completion(.success(response))
+        case .error:
+            let errorMessage = response.error ?? "Unknown error"
             completion(.failure(NSError(domain: errorMessage, code: 0, userInfo: nil)))
         default:
-            completion(.success(webOSResponse!))
+            if response.payload?.pairingType == "PROMPT" {
+                delegate?.didPrompt()
+            }
+            completion(.success(response))
         }
     }
 }

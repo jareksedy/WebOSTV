@@ -26,16 +26,18 @@ class Application {
 }
 
 extension Application: WebOSClientDelegate {
+    func didPrompt() {
+        print("Please accept connection on the TV.")
+    }
+    
+    func didConnect(with clientKey: String) {
+        print("Registered with client key: \(clientKey)")
+        UserDefaults.standard.setValue(clientKey, forKey: "clientKey")
+    }
+    
     func didReceive(_ result: Result<WebOSResponse, Error>) {
         switch result {
         case .success(let response):
-            if response.payload?.pairingType == "PROMPT" {
-                print("Please accept connection on the TV.")
-            }
-            if let clientKey = response.payload?.clientKey {
-                print("Connected with client key: \(clientKey)")
-                UserDefaults.standard.setValue(clientKey, forKey: "clientKey")
-            }
             print(response)
         case .failure(let error):
             print("Error received: \(error)")
