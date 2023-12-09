@@ -16,6 +16,14 @@ extension WebOSTarget: WebOSTargetProtocol {
         switch self {
         case .createToast:
             return "ssap://system.notifications/createToast"
+        case .volumeUp:
+            return "ssap://audio/volumeUp"
+        case .volumeDown:
+            return "ssap://audio/volumeDown"
+        case .getVolume:
+            return "ssap://audio/getVolume"
+        case .setVolume:
+            return "ssap://audio/setVolume"
         default:
             return nil
         }
@@ -38,6 +46,11 @@ extension WebOSTarget: WebOSTargetProtocol {
                 iconExtension: iconExtension
             )
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .setVolume(let volume):
+            let payload = WebOSRequestPayload(volume: volume)
+            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        default:
+            return .init(type: .request, id: uuid, uri: uri)
         }
     }
     

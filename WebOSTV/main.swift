@@ -21,7 +21,22 @@ class Application {
         webOSClient.send(.connect(clientKey: clientKey))
         
         while let input = readLine(), input != "exit" {
-            webOSClient.send(.createToast(message: input))
+            switch input {
+            case "volumeUp":
+                webOSClient.send(.volumeUp)
+            case "volumeDown":
+                webOSClient.send(.volumeDown)
+            case "getVolume":
+                webOSClient.send(.getVolume)
+            case "setVolume":
+                print("Input volume level:", terminator: "")
+                if let volume = Int(readLine()!) {
+                    webOSClient.send(.setVolume(volume))
+                }
+            default:
+                webOSClient.send(.createToast(message: input))
+            }
+            
         }
         
         webOSClient.disconnect(with: .goingAway)

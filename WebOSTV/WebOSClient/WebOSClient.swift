@@ -12,12 +12,13 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     private var webSocketTask: URLSessionWebSocketTask?
     weak var delegate: WebOSClientDelegate?
     
-    init(url: URL?) {
+    init(url: URL?, delegate: WebOSClientDelegate? = nil) {
         super.init()
         guard let url else {
             assertionFailure("Invalid device URL. Terminating.")
             return
         }
+        self.delegate = delegate
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         webSocketTask = urlSession?.webSocketTask(with: url)
         webSocketTask?.resume()
@@ -67,13 +68,12 @@ private extension WebOSClient {
         guard let response = response.decode(),
               let type = response.type,
               let responseType = ResponseType(rawValue: type) else {
-            completion(.failure(NSError(domain: "Unkown response type.", code: 0)))
+            completion(.failure(NSError(domain: "WebOSClient: Unkown response type.", code: 0)))
             return
         }
-        
         switch responseType {
         case .error:
-            let errorMessage = response.error ?? "Unknown error"
+            let errorMessage = response.error ?? "WebOSClient: Unknown error."
             completion(.failure(NSError(domain: errorMessage, code: 0, userInfo: nil)))
         case .registered:
             if let clientKey = response.payload?.clientKey {
