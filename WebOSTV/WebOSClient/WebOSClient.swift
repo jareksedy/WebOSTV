@@ -7,19 +7,7 @@
 
 import Foundation
 
-protocol WebOSClientType {
-    var delegate: WebOSClientDelegate? { get set }
-    @discardableResult func send(_ target: WebOSTarget) -> String?
-    func disconnect(with closeCode: URLSessionWebSocketTask.CloseCode)
-}
-
-protocol WebOSClientDelegate: AnyObject {
-    func didPrompt()
-    func didConnect(with clientKey: String)
-    func didReceive(_ result: Result<WebOSResponse, Error>)
-}
-
-class WebOSClient: NSObject, WebOSClientType {
+class WebOSClient: NSObject, WebOSClientProtocol {
     private var urlSession: URLSession?
     private var webSocketTask: URLSessionWebSocketTask?
     weak var delegate: WebOSClientDelegate?
@@ -27,7 +15,7 @@ class WebOSClient: NSObject, WebOSClientType {
     init(url: URL?) {
         super.init()
         guard let url else {
-            assertionFailure("Device URL is nil. Terminating.")
+            assertionFailure("Invalid device URL. Terminating.")
             return
         }
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
@@ -64,12 +52,7 @@ private extension WebOSClient {
         webSocketTask?.receive { [weak self] result in
             switch result {
             case .success(let response):
-                do {
-                    let webOSResponse = try response.decode()
-                    try self?.handle(webOSResponse, completion: completion)
-                } catch {
-                    completion(.failure(error))
-                }
+                self?.handle(response, completion: completion)
                 self?.listen(completion)
             case .failure(let error):
                 completion(.failure(error))
@@ -78,43 +61,30 @@ private extension WebOSClient {
     }
     
     func handle(
-        _ webOSResponse: WebOSResponse?,
+        _ response: URLSessionWebSocketTask.Message,
         completion: @escaping (Result<WebOSResponse, Error>) -> Void
-    ) throws {
-        guard let response = webOSResponse,
+    ) {
+        guard let response = response.decode(),
               let type = response.type,
               let responseType = ResponseType(rawValue: type) else {
-            throw NSError(domain: "Unknown response type.", code: 0, userInfo: nil)
+            completion(.failure(NSError(domain: "Unkown response type.", code: 0)))
+            return
         }
-
+        
         switch responseType {
+        case .error:
+            let errorMessage = response.error ?? "Unknown error"
+            completion(.failure(NSError(domain: errorMessage, code: 0, userInfo: nil)))
         case .registered:
             if let clientKey = response.payload?.clientKey {
                 delegate?.didConnect(with: clientKey)
             }
-            completion(.success(response))
-        case .error:
-            let errorMessage = response.error ?? "Unknown error"
-            completion(.failure(NSError(domain: errorMessage, code: 0, userInfo: nil)))
+            fallthrough
         default:
-            if response.payload?.pairingType == "PROMPT" {
+            if response.payload?.pairingType == .prompt {
                 delegate?.didPrompt()
             }
             completion(.success(response))
-        }
-    }
-}
-
-extension WebOSClient: URLSessionDelegate {
-    func urlSession(
-        _ session: URLSession,
-        didReceive challenge: URLAuthenticationChallenge,
-        completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
-    ) {
-        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
-            completionHandler(.useCredential, URLCredential(trust: challenge.protectionSpace.serverTrust!))
-        } else {
-            completionHandler(.performDefaultHandling, nil)
         }
     }
 }

@@ -8,9 +8,9 @@
 import Foundation
 
 class Application {
-    var webOSClient: WebOSClientType
+    var webOSClient: WebOSClientProtocol
     
-    init(webOSClient: WebOSClientType) {
+    init(webOSClient: WebOSClientProtocol) {
         self.webOSClient = webOSClient
     }
     
@@ -47,6 +47,9 @@ extension Application: WebOSClientDelegate {
         }
     }
 }
+
+
+//UserDefaults.standard.setValue(nil, forKey: "clientKey")
 
 let url = URL(string: "wss://192.168.8.10:3001")
 let webOSClient = WebOSClient(url: url)

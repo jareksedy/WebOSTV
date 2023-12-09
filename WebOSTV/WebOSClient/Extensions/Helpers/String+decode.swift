@@ -8,6 +8,10 @@
 import Foundation
 
 extension String {
+    static let prompt = "PROMPT"
+}
+
+extension String {
     func decode<T: Codable>() throws -> T {
         guard let data = self.data(using: .utf8) else {
             throw NSError(domain: "Invalid string encoding", code: 0, userInfo: nil)

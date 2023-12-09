@@ -1,25 +1,13 @@
 //
-//  WebOSTarget.swift
+//  WebOSTargetExtension.swift
 //  WebOSTV
 //
-//  Created by Ярослав on 06.12.2023.
+//  Created by Ярослав on 09.12.2023.
 //
 
 import Foundation
 
-protocol WebOSTargetType {
-    var uuid: String { get }
-    var uri: String? { get }
-    var request: WebOSRequest { get }
-    var json: String? { get }
-}
-
-enum WebOSTarget: WebOSTargetType {
-    case connect(clientKey: String?)
-    case createToast(message: String, iconData: Data? = nil, iconExtension: String? = nil)
-}
-
-extension WebOSTarget {
+extension WebOSTarget: WebOSTargetProtocol {
     var uuid: String {
         return UUID().uuidString.lowercased()
     }
@@ -39,7 +27,7 @@ extension WebOSTarget {
             let payload = WebOSRequestPayload(
                 forcePairing: false,
                 manifest: WebOSRequestManifest(),
-                pairingType: "PROMPT",
+                pairingType: .prompt,
                 clientKey: clientKey
             )
             return .init(type: .register, id: uuid, payload: payload)
