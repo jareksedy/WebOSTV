@@ -29,10 +29,25 @@ class Application {
             case "getVolume":
                 webOSClient.send(.getVolume)
             case "setVolume":
-                print("Input volume level:", terminator: "")
+                print("Volume:", terminator: "")
                 if let volume = Int(readLine()!) {
                     webOSClient.send(.setVolume(volume))
                 }
+            case "setMute":
+                print("Mute:", terminator: "")
+                if let mute = Bool(readLine()!) {
+                    webOSClient.send(.setMute(mute))
+                }
+            case "play":
+                webOSClient.send(.play)
+            case "pause":
+                webOSClient.send(.pause)
+            case "stop":
+                webOSClient.send(.stop)
+            case "rewind":
+                webOSClient.send(.rewind)
+            case "fastForward":
+                webOSClient.send(.fastForward)
             default:
                 webOSClient.send(.createToast(message: input))
             }

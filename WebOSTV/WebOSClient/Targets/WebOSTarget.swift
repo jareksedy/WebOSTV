@@ -14,4 +14,10 @@ enum WebOSTarget {
     case volumeDown
     case getVolume
     case setVolume(Int)
+    case setMute(Bool)
+    case play
+    case pause
+    case stop
+    case rewind
+    case fastForward
 }

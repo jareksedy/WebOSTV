@@ -24,6 +24,18 @@ extension WebOSTarget: WebOSTargetProtocol {
             return "ssap://audio/getVolume"
         case .setVolume:
             return "ssap://audio/setVolume"
+        case .setMute:
+            return "ssap://audio/setMute"
+        case .play:
+            return "ssap://media.controls/play"
+        case .pause:
+            return "ssap://media.controls/pause"
+        case .stop:
+            return "ssap://media.controls/stop"
+        case .rewind:
+            return "ssap://media.controls/rewind"
+        case .fastForward:
+            return "ssap://media.controls/fastForward"
         default:
             return nil
         }
@@ -48,6 +60,9 @@ extension WebOSTarget: WebOSTargetProtocol {
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         case .setVolume(let volume):
             let payload = WebOSRequestPayload(volume: volume)
+            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .setMute(let mute):
+            let payload = WebOSRequestPayload(mute: mute)
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         default:
             return .init(type: .request, id: uuid, uri: uri)

@@ -16,6 +16,7 @@ struct WebOSResponsePayload: Codable {
     var volume: Int?
     var soundOutput: String?
     var volumeStatus: WebOSResponseVolumeStatus?
+    var muteStatus: Bool?
     
     enum CodingKeys: String, CodingKey {
         case pairingType
@@ -26,5 +27,6 @@ struct WebOSResponsePayload: Codable {
         case volume
         case soundOutput
         case volumeStatus
+        case muteStatus
     }
 }

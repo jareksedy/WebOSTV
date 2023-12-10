@@ -16,6 +16,7 @@ struct WebOSRequestPayload: Codable {
     var iconData: Data?
     var iconExtension: String?
     var volume: Int?
+    var mute: Bool?
     
     enum CodingKeys: String, CodingKey {
         case clientKey = "client-key"
@@ -26,5 +27,6 @@ struct WebOSRequestPayload: Codable {
         case iconData
         case iconExtension
         case volume
+        case mute
     }
 }
