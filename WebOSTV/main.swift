@@ -48,6 +48,13 @@ class Application {
                 webOSClient.send(.rewind)
             case "fastForward":
                 webOSClient.send(.fastForward)
+            case "getSoundOutput":
+                webOSClient.send(.getSoundOutput)
+            case "changeSoundOutput":
+                print("Output:", terminator: "")
+                if let output = SoundOutputType(rawValue: String(readLine()!)) {
+                    webOSClient.send(.changeSoundOutput(output))
+                }
             default:
                 webOSClient.send(.createToast(message: input))
             }

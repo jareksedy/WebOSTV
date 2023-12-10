@@ -8,8 +8,8 @@
 import Foundation
 
 struct WebOSResponse: Codable {
-    var type: String?
-    var id: String?
-    var error: String?
-    var payload: WebOSResponsePayload?
+    let type: String?
+    let id: String?
+    let error: String?
+    let payload: WebOSResponsePayload?
 }

@@ -36,6 +36,10 @@ extension WebOSTarget: WebOSTargetProtocol {
             return "ssap://media.controls/rewind"
         case .fastForward:
             return "ssap://media.controls/fastForward"
+        case .getSoundOutput:
+            return "ssap://audio/getSoundOutput"
+        case .changeSoundOutput:
+            return "ssap://audio/changeSoundOutput"
         default:
             return nil
         }
@@ -63,6 +67,9 @@ extension WebOSTarget: WebOSTargetProtocol {
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         case .setMute(let mute):
             let payload = WebOSRequestPayload(mute: mute)
+            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .changeSoundOutput(let soundOutput):
+            let payload = WebOSRequestPayload(output: soundOutput.rawValue)
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         default:
             return .init(type: .request, id: uuid, uri: uri)

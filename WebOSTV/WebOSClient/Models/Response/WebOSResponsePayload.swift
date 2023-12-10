@@ -8,15 +8,16 @@
 import Foundation
 
 struct WebOSResponsePayload: Codable {
-    var pairingType: String?
-    var returnValue: Bool?
-    var clientKey: String?
-    var toastId: String?
-    var callerId: String?
-    var volume: Int?
-    var soundOutput: String?
-    var volumeStatus: WebOSResponseVolumeStatus?
-    var muteStatus: Bool?
+    let pairingType: String?
+    let returnValue: Bool?
+    let clientKey: String?
+    let toastId: String?
+    let callerId: String?
+    let volume: Int?
+    let soundOutput: String?
+    let volumeStatus: WebOSResponseVolumeStatus?
+    let muteStatus: Bool?
+    let method: String?
     
     enum CodingKeys: String, CodingKey {
         case pairingType
@@ -28,5 +29,6 @@ struct WebOSResponsePayload: Codable {
         case soundOutput
         case volumeStatus
         case muteStatus
+        case method
     }
 }

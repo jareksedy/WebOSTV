@@ -20,4 +20,6 @@ enum WebOSTarget {
     case stop
     case rewind
     case fastForward
+    case getSoundOutput
+    case changeSoundOutput(SoundOutputType)
 }
