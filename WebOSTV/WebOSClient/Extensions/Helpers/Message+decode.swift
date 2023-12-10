@@ -11,9 +11,6 @@ extension URLSessionWebSocketTask.Message {
     func decode() -> WebOSResponse? {
         switch self {
         case .string(let string):
-            print()
-            print(string)
-            print()
             return try? string.decode()
         case .data:
             return nil
