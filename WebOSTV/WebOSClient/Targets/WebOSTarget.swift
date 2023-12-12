@@ -24,7 +24,7 @@ enum WebOSTarget {
     case getSoundOutput(subscribe: Bool = false)
     case changeSoundOutput(SoundOutputType)
     // System
-    case createToast(message: String, iconData: Data? = nil, iconExtension: String? = nil)
+    case notify(message: String, iconData: Data? = nil, iconExtension: String? = nil)
     case screenOff
     case screenOn
     case systemInfo

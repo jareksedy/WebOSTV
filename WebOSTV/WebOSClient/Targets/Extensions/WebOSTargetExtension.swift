@@ -14,8 +14,6 @@ extension WebOSTarget: WebOSTargetProtocol {
     
     var uri: String? {
         switch self {
-        case .createToast:
-            return "ssap://system.notifications/createToast"
         case .volumeUp:
             return "ssap://audio/volumeUp"
         case .volumeDown:
@@ -40,6 +38,8 @@ extension WebOSTarget: WebOSTargetProtocol {
             return "ssap://audio/getSoundOutput"
         case .changeSoundOutput:
             return "ssap://audio/changeSoundOutput"
+        case .notify:
+            return "ssap://system.notifications/createToast"
         case .screenOff:
             return "ssap://com.webos.service.tvpower/power/turnOffScreen"
         case .screenOn:
@@ -63,13 +63,6 @@ extension WebOSTarget: WebOSTargetProtocol {
                 clientKey: clientKey
             )
             return .init(type: .register, id: uuid, payload: payload)
-        case .createToast(let message, let iconData, let iconExtension):
-            let payload = WebOSRequestPayload(
-                message: message,
-                iconData: iconData,
-                iconExtension: iconExtension
-            )
-            return .init(type: .request, id: uuid, uri: uri, payload: payload)
         case .getVolume(let subscribe):
             return .init(type: subscribe ? .subscribe : .request, id: uuid, uri: uri)
         case .setVolume(let volume):
@@ -82,6 +75,13 @@ extension WebOSTarget: WebOSTargetProtocol {
             return .init(type: subscribe ? .subscribe : .request, id: uuid, uri: uri)
         case .changeSoundOutput(let soundOutput):
             let payload = WebOSRequestPayload(output: soundOutput.rawValue)
+            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .notify(let message, let iconData, let iconExtension):
+            let payload = WebOSRequestPayload(
+                message: message,
+                iconData: iconData,
+                iconExtension: iconExtension
+            )
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         case .screenOn, .screenOff:
             let payload = WebOSRequestPayload(standbyMode: "active")

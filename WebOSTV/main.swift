@@ -68,7 +68,7 @@ class Application {
             case "turnOff":
                 webOSClient.send(.turnOff)
             default:
-                webOSClient.send(.createToast(message: input))
+                webOSClient.send(.notify(message: input))
             }
             
         }
