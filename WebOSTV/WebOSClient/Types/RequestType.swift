@@ -10,5 +10,6 @@ import Foundation
 enum RequestType: String {
     case register
     case request
+    case subscribe
     case unknown
 }

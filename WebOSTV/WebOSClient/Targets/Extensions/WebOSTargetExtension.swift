@@ -40,6 +40,14 @@ extension WebOSTarget: WebOSTargetProtocol {
             return "ssap://audio/getSoundOutput"
         case .changeSoundOutput:
             return "ssap://audio/changeSoundOutput"
+        case .screenOff:
+            return "ssap://com.webos.service.tvpower/power/turnOffScreen"
+        case .screenOn:
+            return "ssap://com.webos.service.tvpower/power/turnOnScreen"
+        case .systemInfo:
+            return "ssap://com.webos.service.update/getCurrentSWInformation"
+        case .turnOff:
+            return "ssap://system/turnOff"
         default:
             return nil
         }
@@ -62,14 +70,21 @@ extension WebOSTarget: WebOSTargetProtocol {
                 iconExtension: iconExtension
             )
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .getVolume(let subscribe):
+            return .init(type: subscribe ? .subscribe : .request, id: uuid, uri: uri)
         case .setVolume(let volume):
             let payload = WebOSRequestPayload(volume: volume)
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         case .setMute(let mute):
             let payload = WebOSRequestPayload(mute: mute)
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .getSoundOutput(let subscribe):
+            return .init(type: subscribe ? .subscribe : .request, id: uuid, uri: uri)
         case .changeSoundOutput(let soundOutput):
             let payload = WebOSRequestPayload(output: soundOutput.rawValue)
+            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .screenOn, .screenOff:
+            let payload = WebOSRequestPayload(standbyMode: "active")
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         default:
             return .init(type: .request, id: uuid, uri: uri)

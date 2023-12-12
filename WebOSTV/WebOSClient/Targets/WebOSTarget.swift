@@ -8,11 +8,12 @@
 import Foundation
 
 enum WebOSTarget {
+    // Connection
     case connect(clientKey: String?)
-    case createToast(message: String, iconData: Data? = nil, iconExtension: String? = nil)
+    // Audio
     case volumeUp
     case volumeDown
-    case getVolume
+    case getVolume(subscribe: Bool = false)
     case setVolume(Int)
     case setMute(Bool)
     case play
@@ -20,6 +21,12 @@ enum WebOSTarget {
     case stop
     case rewind
     case fastForward
-    case getSoundOutput
+    case getSoundOutput(subscribe: Bool = false)
     case changeSoundOutput(SoundOutputType)
+    // System
+    case createToast(message: String, iconData: Data? = nil, iconExtension: String? = nil)
+    case screenOff
+    case screenOn
+    case systemInfo
+    case turnOff
 }

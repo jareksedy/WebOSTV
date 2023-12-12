@@ -27,7 +27,9 @@ class Application {
             case "volumeDown":
                 webOSClient.send(.volumeDown)
             case "getVolume":
-                webOSClient.send(.getVolume)
+                webOSClient.send(.getVolume())
+            case "getVolume subscribe":
+                webOSClient.send(.getVolume(subscribe: true))
             case "setVolume":
                 print("Volume:", terminator: "")
                 if let volume = Int(readLine()!) {
@@ -49,12 +51,22 @@ class Application {
             case "fastForward":
                 webOSClient.send(.fastForward)
             case "getSoundOutput":
-                webOSClient.send(.getSoundOutput)
+                webOSClient.send(.getSoundOutput())
+            case "getSoundOutput subscribe":
+                webOSClient.send(.getSoundOutput(subscribe: true))
             case "changeSoundOutput":
                 print("Output:", terminator: "")
                 if let output = SoundOutputType(rawValue: String(readLine()!)) {
                     webOSClient.send(.changeSoundOutput(output))
                 }
+            case "screenOff":
+                webOSClient.send(.screenOff)
+            case "screenOn":
+                webOSClient.send(.screenOn)
+            case "sysInfo":
+                webOSClient.send(.systemInfo)
+            case "turnOff":
+                webOSClient.send(.turnOff)
             default:
                 webOSClient.send(.createToast(message: input))
             }
