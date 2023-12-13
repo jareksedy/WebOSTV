@@ -9,6 +9,7 @@ import Foundation
 
 class Application {
     var webOSClient: WebOSClientProtocol
+    var listAppsId: String?
     
     init(webOSClient: WebOSClientProtocol) {
         self.webOSClient = webOSClient
@@ -67,6 +68,8 @@ class Application {
                 webOSClient.send(.systemInfo)
             case "turnOff":
                 webOSClient.send(.turnOff)
+            case "listApps":
+                listAppsId = webOSClient.send(.listApps)
             default:
                 webOSClient.send(.notify(message: input))
             }

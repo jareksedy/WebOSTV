@@ -13,6 +13,7 @@
 		CA0273282B2472600086C353 /* WebOSClientDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0273272B2472600086C353 /* WebOSClientDelegate.swift */; };
 		CA02732B2B24729F0086C353 /* WebOSClient+URLSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA02732A2B24729F0086C353 /* WebOSClient+URLSessionDelegate.swift */; };
 		CA02732F2B24C86F0086C353 /* WebOSResponseVolumeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA02732E2B24C86F0086C353 /* WebOSResponseVolumeStatus.swift */; };
+		CA033FAC2B28ACE000445041 /* WebOSResponseApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA033FAB2B28ACE000445041 /* WebOSResponseApplication.swift */; };
 		CA11DA9C2B256ED000994FCA /* SoundOutputType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA11DA9B2B256ED000994FCA /* SoundOutputType.swift */; };
 		CA30AC5C2B2019CD00254F4F /* WebOSResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA30AC5B2B2019CD00254F4F /* WebOSResponse.swift */; };
 		CA30AC602B2019FD00254F4F /* WebOSRequestManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA30AC5F2B2019FD00254F4F /* WebOSRequestManifest.swift */; };
@@ -49,6 +50,7 @@
 		CA0273272B2472600086C353 /* WebOSClientDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSClientDelegate.swift; sourceTree = "<group>"; };
 		CA02732A2B24729F0086C353 /* WebOSClient+URLSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebOSClient+URLSessionDelegate.swift"; sourceTree = "<group>"; };
 		CA02732E2B24C86F0086C353 /* WebOSResponseVolumeStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSResponseVolumeStatus.swift; sourceTree = "<group>"; };
+		CA033FAB2B28ACE000445041 /* WebOSResponseApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSResponseApplication.swift; sourceTree = "<group>"; };
 		CA11DA9B2B256ED000994FCA /* SoundOutputType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundOutputType.swift; sourceTree = "<group>"; };
 		CA30AC5B2B2019CD00254F4F /* WebOSResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSResponse.swift; sourceTree = "<group>"; };
 		CA30AC5F2B2019FD00254F4F /* WebOSRequestManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSRequestManifest.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 			children = (
 				CA30AC5B2B2019CD00254F4F /* WebOSResponse.swift */,
 				CA30AC672B201B1000254F4F /* WebOSResponsePayload.swift */,
+				CA033FAB2B28ACE000445041 /* WebOSResponseApplication.swift */,
 				CA02732E2B24C86F0086C353 /* WebOSResponseVolumeStatus.swift */,
 			);
 			path = Response;
@@ -238,7 +241,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1510;
 				TargetAttributes = {
 					CA94030F2B1785AA00260910 = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -288,6 +291,7 @@
 				CA9403142B1785AA00260910 /* main.swift in Sources */,
 				CA76C1A12B1F5931000B451C /* String+decode.swift in Sources */,
 				CA94031D2B17864700260910 /* WebOSClient.swift in Sources */,
+				CA033FAC2B28ACE000445041 /* WebOSResponseApplication.swift in Sources */,
 				CA30AC662B201A7800254F4F /* WebOSRequestPayload.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -329,6 +333,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -392,6 +397,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -417,6 +423,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 4NK62H99X6;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -428,6 +435,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 4NK62H99X6;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";

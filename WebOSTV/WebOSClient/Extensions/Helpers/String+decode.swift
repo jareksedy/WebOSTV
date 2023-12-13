@@ -24,4 +24,9 @@ extension String {
             throw error
         }
     }
+    
+    func extractId() -> String? {
+        let request: WebOSRequest? = try? self.decode()
+        return request?.id
+    }
 }

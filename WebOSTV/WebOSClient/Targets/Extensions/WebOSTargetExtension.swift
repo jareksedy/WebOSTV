@@ -48,6 +48,8 @@ extension WebOSTarget: WebOSTargetProtocol {
             return "ssap://com.webos.service.update/getCurrentSWInformation"
         case .turnOff:
             return "ssap://system/turnOff"
+        case .listApps:
+            return "ssap://com.webos.applicationManager/listApps"
         default:
             return nil
         }

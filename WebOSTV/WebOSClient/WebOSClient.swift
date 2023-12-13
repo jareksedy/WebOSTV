@@ -29,20 +29,27 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     
     @discardableResult
     func send(_ target: WebOSTarget) -> String? {
-        guard let json = target.json else { return nil }
+        guard let json = target.json,
+              let requestId = json.extractId() else {
+            return nil
+        }
         let message = URLSessionWebSocketTask.Message.string(json)
         webSocketTask?.send(message) { error in
             if let error = error {
                 print(error)
             }
         }
-        return target.request.id
+        return requestId
     }
     
     func disconnect(
         with closeCode: URLSessionWebSocketTask.CloseCode = .goingAway
     ) {
         webSocketTask?.cancel(with: closeCode, reason: nil)
+    }
+    
+    deinit {
+        disconnect()
     }
 }
 

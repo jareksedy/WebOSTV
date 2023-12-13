@@ -29,4 +29,6 @@ enum WebOSTarget {
     case screenOn
     case systemInfo
     case turnOff
+    // Apps
+    case listApps
 }

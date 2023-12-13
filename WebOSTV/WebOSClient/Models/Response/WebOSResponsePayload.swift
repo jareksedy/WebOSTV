@@ -32,6 +32,8 @@ struct WebOSResponsePayload: Codable {
     let ecoInfo: String?
     let configKey: String?
     let languageCode: String?
+    let subscribed: Bool?
+    let applications: [WebOSResponseApplication]?
     
     enum CodingKeys: String, CodingKey {
         case pairingType
@@ -58,5 +60,7 @@ struct WebOSResponsePayload: Codable {
         case ecoInfo = "eco_info"
         case configKey = "config_key"
         case languageCode = "language_code"
+        case subscribed
+        case applications = "apps"
     }
 }
