@@ -32,12 +32,12 @@ class Application {
             case "getVolume subscribe":
                 webOSClient.send(.getVolume(subscribe: true))
             case "setVolume":
-                print("Volume:", terminator: "")
+                print("Volume: ", terminator: "")
                 if let volume = Int(readLine()!) {
                     webOSClient.send(.setVolume(volume))
                 }
             case "setMute":
-                print("Mute:", terminator: "")
+                print("Mute: ", terminator: "")
                 if let mute = Bool(readLine()!) {
                     webOSClient.send(.setMute(mute))
                 }
@@ -56,7 +56,7 @@ class Application {
             case "getSoundOutput subscribe":
                 webOSClient.send(.getSoundOutput(subscribe: true))
             case "changeSoundOutput":
-                print("Output:", terminator: "")
+                print("Output: ", terminator: "")
                 if let output = SoundOutputType(rawValue: String(readLine()!)) {
                     webOSClient.send(.changeSoundOutput(output))
                 }
@@ -70,6 +70,20 @@ class Application {
                 webOSClient.send(.turnOff)
             case "listApps":
                 listAppsId = webOSClient.send(.listApps)
+            case "getForegroundApp":
+                webOSClient.send(.getForegroundApp())
+            case "getForegroundApp subscribe":
+                webOSClient.send(.getForegroundApp(subscribe: true))
+            case "launchApp":
+                print("AppId: ", terminator: "")
+                if let appId = readLine() {
+                    webOSClient.send(.launchApp(appId: appId))
+                }
+            case "closeApp":
+                print("AppId: ", terminator: "")
+                if let appId = readLine() {
+                    webOSClient.send(.closeApp(appId: appId))
+                }
             default:
                 webOSClient.send(.notify(message: input))
             }

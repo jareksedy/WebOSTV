@@ -34,6 +34,11 @@ struct WebOSResponsePayload: Codable {
     let languageCode: String?
     let subscribed: Bool?
     let applications: [WebOSResponseApplication]?
+    let appId: String?
+    let processId: String?
+    let windowId: String?
+    let id: String?
+    let sessionId: String?
     
     enum CodingKeys: String, CodingKey {
         case pairingType
@@ -62,5 +67,10 @@ struct WebOSResponsePayload: Codable {
         case languageCode = "language_code"
         case subscribed
         case applications = "apps"
+        case appId
+        case processId
+        case windowId
+        case id
+        case sessionId
     }
 }

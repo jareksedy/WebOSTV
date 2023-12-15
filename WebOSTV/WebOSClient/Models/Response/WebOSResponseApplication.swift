@@ -8,6 +8,7 @@
 import Foundation
 
 struct WebOSResponseApplication: Codable {
+    let id: String?
     let title: String?
     let icon: String?
     let folderPath: String?
@@ -16,5 +17,4 @@ struct WebOSResponseApplication: Codable {
     let visible: Bool?
     let vendor: String?
     let type: String?
-    let id: String?
 }

@@ -31,4 +31,7 @@ enum WebOSTarget {
     case turnOff
     // Apps
     case listApps
+    case getForegroundApp(subscribe: Bool = false)
+    case launchApp(appId: String, contentId: String? = nil, params: String? = nil)
+    case closeApp(appId: String, sessionId: String? = nil)
 }

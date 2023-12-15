@@ -50,6 +50,12 @@ extension WebOSTarget: WebOSTargetProtocol {
             return "ssap://system/turnOff"
         case .listApps:
             return "ssap://com.webos.applicationManager/listApps"
+        case .getForegroundApp:
+            return "ssap://com.webos.applicationManager/getForegroundAppInfo"
+        case .launchApp:
+            return "ssap://system.launcher/launch"
+        case .closeApp:
+            return "ssap://system.launcher/close"
         default:
             return nil
         }
@@ -87,6 +93,14 @@ extension WebOSTarget: WebOSTargetProtocol {
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         case .screenOn, .screenOff:
             let payload = WebOSRequestPayload(standbyMode: "active")
+            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .getForegroundApp(let subscribe):
+            return .init(type: subscribe ? .subscribe : .request, id: uuid, uri: uri)
+        case .launchApp(let appId, let contentId, let params):
+            let payload = WebOSRequestPayload(id: appId, contentId: contentId, params: params)
+            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .closeApp(let appId, let sessionId):
+            let payload = WebOSRequestPayload(id: appId, sessionId: sessionId)
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         default:
             return .init(type: .request, id: uuid, uri: uri)
