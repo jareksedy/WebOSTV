@@ -34,4 +34,8 @@ enum WebOSTarget {
     case getForegroundApp(subscribe: Bool = false)
     case launchApp(appId: String, contentId: String? = nil, params: String? = nil)
     case closeApp(appId: String, sessionId: String? = nil)
+    // Input
+    case insertText(text: String, replace: Int = 0)
+    case sendEnterKey
+    case deleteCharacters(count: Int = 1)
 }

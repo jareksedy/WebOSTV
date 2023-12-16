@@ -84,6 +84,15 @@ class Application {
                 if let appId = readLine() {
                     webOSClient.send(.closeApp(appId: appId))
                 }
+            case "insertText":
+                print("Text: ", terminator: "")
+                if let text = readLine() {
+                    webOSClient.send(.insertText(text: text))
+                }
+            case "enter":
+                webOSClient.send(.sendEnterKey)
+            case "delete":
+                webOSClient.send(.deleteCharacters())
             default:
                 webOSClient.send(.notify(message: input))
             }

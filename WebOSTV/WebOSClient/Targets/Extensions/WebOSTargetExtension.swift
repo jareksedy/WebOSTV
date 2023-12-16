@@ -56,6 +56,12 @@ extension WebOSTarget: WebOSTargetProtocol {
             return "ssap://system.launcher/launch"
         case .closeApp:
             return "ssap://system.launcher/close"
+        case .insertText:
+            return "ssap://com.webos.service.ime/insertText"
+        case .sendEnterKey:
+            return "ssap://com.webos.service.ime/sendEnterKey"
+        case .deleteCharacters:
+            return "ssap://com.webos.service.ime/deleteCharacters"
         default:
             return nil
         }
@@ -101,6 +107,12 @@ extension WebOSTarget: WebOSTargetProtocol {
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         case .closeApp(let appId, let sessionId):
             let payload = WebOSRequestPayload(id: appId, sessionId: sessionId)
+            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .insertText(let text, let replace):
+            let payload = WebOSRequestPayload(text: text, replace: replace)
+            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+        case .deleteCharacters(let count):
+            let payload = WebOSRequestPayload(count: count)
             return .init(type: .request, id: uuid, uri: uri, payload: payload)
         default:
             return .init(type: .request, id: uuid, uri: uri)

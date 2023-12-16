@@ -23,6 +23,9 @@ struct WebOSRequestPayload: Codable {
     var contentId: String?
     var params: String?
     var sessionId: String?
+    var text: String?
+    var replace: Int?
+    var count: Int?
     
     enum CodingKeys: String, CodingKey {
         case clientKey = "client-key"
@@ -40,5 +43,8 @@ struct WebOSRequestPayload: Codable {
         case contentId
         case params
         case sessionId
+        case text
+        case replace
+        case count
     }
 }
