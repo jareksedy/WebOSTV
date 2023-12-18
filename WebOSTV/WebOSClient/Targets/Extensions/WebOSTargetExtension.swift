@@ -75,9 +75,9 @@ extension WebOSTarget: WebOSTargetProtocol {
                 clientKey: clientKey
             )
             return .init(type: .register, payload: payload)
-        case .getVolume(let id, let subscribe), .getSoundOutput(let id, let subscribe), .getForegroundApp(let id, let subscribe):
+        case .getVolume(let subscribe), .getSoundOutput(let subscribe), .getForegroundApp(let subscribe):
             if let subscribe {
-                return .init(type: subscribe ? .subscribe : .unsubscribe, id: id, uri: uri)
+                return .init(type: subscribe ? .subscribe : .unsubscribe, uri: uri)
             }
             return .init(type: .request, uri: uri)
         case .setVolume(let volume):

@@ -30,9 +30,9 @@ class Application {
             case "getVolume":
                 webOSClient.send(.getVolume())
             case "getVolume subscribe":
-                webOSClient.send(.getVolume(id: "volumeSubscription", subscribe: true))
+                webOSClient.send(.getVolume(subscribe: true), id: "volumeSubscription")
             case "getVolume unsubscribe":
-                webOSClient.send(.getVolume(id: "volumeSubscription", subscribe: false))
+                webOSClient.send(.getVolume(subscribe: false), id: "volumeSubscription")
             case "setVolume":
                 print("Volume: ", terminator: "")
                 if let volume = Int(readLine()!) {
@@ -75,9 +75,9 @@ class Application {
             case "getForegroundApp":
                 webOSClient.send(.getForegroundApp())
             case "getForegroundApp subscribe":
-                webOSClient.send(.getForegroundApp(id: "appSubscription", subscribe: true))
+                webOSClient.send(.getForegroundApp(subscribe: true), id: "appSubscription")
             case "getForegroundApp unsubscribe":
-                webOSClient.send(.getForegroundApp(id: "appSubscription", subscribe: false))
+                webOSClient.send(.getForegroundApp(subscribe: false), id: "appSubscription")
             case "launchApp":
                 print("AppId: ", terminator: "")
                 if let appId = readLine() {
@@ -104,7 +104,6 @@ class Application {
             }
             
         }
-        
         webOSClient.disconnect(with: .goingAway)
     }
 }
@@ -122,6 +121,14 @@ extension Application: WebOSClientDelegate {
     func didReceive(_ result: Result<WebOSResponse, Error>) {
         switch result {
         case .success(let response):
+            if response.id == "volumeSubscription" {
+                print("vol: \(response.payload?.volumeStatus?.volume ?? -1)")
+                return
+            }
+            if response.id == "appSubscription" {
+                print("app: \(response.payload?.appId ?? "nan")")
+                return
+            }
             print(response)
         case .failure(let error):
             print("Error received: \(error)")
