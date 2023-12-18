@@ -41,8 +41,8 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         return id
     }
     
-    func send(_ request: String) {
-        let message = URLSessionWebSocketTask.Message.string(request)
+    func send(_ jsonRequest: String) {
+        let message = URLSessionWebSocketTask.Message.string(jsonRequest)
         webSocketTask?.send(message) { error in
             if let error = error {
                 print(error)
