@@ -112,6 +112,36 @@ class Application {
                 webOSClient.sendKey(.scroll(dx: 0, dy: 50))
             case "key_home":
                 webOSClient.sendKey(.home)
+            case "key_back":
+                webOSClient.sendKey(.back)
+            case "key_pause":
+                webOSClient.sendKey(.pause)
+            case "key_play":
+                webOSClient.sendKey(.play)
+            case "key_volDown":
+                webOSClient.sendKey(.volumeDown)
+            case "key_volUp":
+                webOSClient.sendKey(.volumeUp)
+            case "key_cc":
+                webOSClient.sendKey(.cc)
+            case "key_left":
+                webOSClient.sendKey(.left)
+            case "key_right":
+                webOSClient.sendKey(.right)
+            case "key_up":
+                webOSClient.sendKey(.up)
+            case "key_down":
+                webOSClient.sendKey(.down)
+            case "key_ok":
+                webOSClient.sendKey(.enter)
+            case "key_green":
+                webOSClient.sendKey(.green)
+            case "key_red":
+                webOSClient.sendKey(.red)
+            case "key_blue":
+                webOSClient.sendKey(.blue)
+            case "key_yellow":
+                webOSClient.sendKey(.yellow)
             default:
                 webOSClient.send(.notify(message: input))
             }
