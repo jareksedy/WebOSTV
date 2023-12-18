@@ -41,6 +41,15 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         return id
     }
     
+    func send(_ request: String) {
+        let message = URLSessionWebSocketTask.Message.string(request)
+        webSocketTask?.send(message) { error in
+            if let error = error {
+                print(error)
+            }
+        }
+    }
+    
     func disconnect(
         with closeCode: URLSessionWebSocketTask.CloseCode = .goingAway
     ) {
@@ -71,6 +80,9 @@ private extension WebOSClient {
         _ response: URLSessionWebSocketTask.Message,
         completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) {
+        if case .string(let json) = response {
+            delegate?.didReceive(json)
+        }
         guard let response = response.decode(),
               let type = response.type,
               let responseType = ResponseType(rawValue: type) else {

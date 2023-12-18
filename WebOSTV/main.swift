@@ -99,6 +99,11 @@ class Application {
                 webOSClient.send(.deleteCharacters())
             case "getPointerInputSocket":
                 webOSClient.send(.getPointerInputSocket)
+            case "send":
+                print("Request: ", terminator: "")
+                if let request = readLine() {
+                    webOSClient.send(request)
+                }
             default:
                 webOSClient.send(.notify(message: input))
             }
