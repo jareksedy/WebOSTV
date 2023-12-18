@@ -28,13 +28,8 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     }
     
     @discardableResult
-    func send(_ target: WebOSTarget, id: String? = nil) -> String? {
-        var request = target.request
-        if let id {
-            request.id = id
-        }
-        guard let json = request.json,
-              let requestId = json.extractId() else {
+    func send(_ target: WebOSTarget, id: String) -> String? {
+        guard let json = target.request.jsonWithId(id) else {
             return nil
         }
         let message = URLSessionWebSocketTask.Message.string(json)
@@ -43,7 +38,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
                 print(error)
             }
         }
-        return requestId
+        return id
     }
     
     func disconnect(
