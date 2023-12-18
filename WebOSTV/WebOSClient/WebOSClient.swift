@@ -10,6 +10,8 @@ import Foundation
 class WebOSClient: NSObject, WebOSClientProtocol {
     private var urlSession: URLSession?
     private var webSocketTask: URLSessionWebSocketTask?
+    private var pointerWebSocketTask: URLSessionWebSocketTask?
+    private var pointerRequestId: String?
     weak var delegate: WebOSClientDelegate?
     
     init(url: URL?, delegate: WebOSClientDelegate? = nil) {
@@ -50,9 +52,31 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         }
     }
     
+    func sendKey(_ key: WebOSKeyTarget) {
+        guard let request = key.request else {
+            return
+        }
+        let message = URLSessionWebSocketTask.Message.data(request)
+        pointerWebSocketTask?.send(message) { error in
+            if let error = error {
+                print(error)
+            }
+        }
+    }
+    
+    func sendKey(_ data: Data) {
+        let message = URLSessionWebSocketTask.Message.data(data)
+        pointerWebSocketTask?.send(message) { error in
+            if let error = error {
+                print(error)
+            }
+        }
+    }
+    
     func disconnect(
         with closeCode: URLSessionWebSocketTask.CloseCode = .goingAway
     ) {
+        pointerWebSocketTask?.cancel(with: closeCode, reason: nil)
         webSocketTask?.cancel(with: closeCode, reason: nil)
     }
     
@@ -96,13 +120,24 @@ private extension WebOSClient {
         case .registered:
             if let clientKey = response.payload?.clientKey {
                 delegate?.didConnect(with: clientKey)
+                pointerRequestId = send(.getPointerInputSocket)
             }
             fallthrough
         default:
             if response.payload?.pairingType == .prompt {
                 delegate?.didPrompt()
             }
+            if let socketPath = response.payload?.socketPath,
+               let url = URL(string: socketPath),
+               response.id == pointerRequestId {
+                connectToPointerWebSocket(url)
+            }
             completion(.success(response))
         }
+    }
+    
+    func connectToPointerWebSocket(_ url: URL) {
+        pointerWebSocketTask = urlSession?.webSocketTask(with: url)
+        pointerWebSocketTask?.resume()
     }
 }

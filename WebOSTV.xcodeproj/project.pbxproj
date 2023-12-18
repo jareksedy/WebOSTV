@@ -15,6 +15,10 @@
 		CA02732F2B24C86F0086C353 /* WebOSResponseVolumeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA02732E2B24C86F0086C353 /* WebOSResponseVolumeStatus.swift */; };
 		CA033FAC2B28ACE000445041 /* WebOSResponseApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA033FAB2B28ACE000445041 /* WebOSResponseApplication.swift */; };
 		CA033FAE2B30060300445041 /* Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA033FAD2B30060300445041 /* Codable.swift */; };
+		CA033FB22B3041C600445041 /* WebOSKeyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA033FB12B3041C600445041 /* WebOSKeyType.swift */; };
+		CA033FB42B30448600445041 /* WebOSKeyTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA033FB32B30448600445041 /* WebOSKeyTarget.swift */; };
+		CA033FB62B3044F800445041 /* WebOSKeyTargetProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA033FB52B3044F800445041 /* WebOSKeyTargetProtocol.swift */; };
+		CA033FB82B30454500445041 /* WebOSKeyTargetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA033FB72B30454500445041 /* WebOSKeyTargetExtension.swift */; };
 		CA11DA9C2B256ED000994FCA /* SoundOutputType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA11DA9B2B256ED000994FCA /* SoundOutputType.swift */; };
 		CA30AC5C2B2019CD00254F4F /* WebOSResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA30AC5B2B2019CD00254F4F /* WebOSResponse.swift */; };
 		CA30AC602B2019FD00254F4F /* WebOSRequestManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA30AC5F2B2019FD00254F4F /* WebOSRequestManifest.swift */; };
@@ -53,6 +57,10 @@
 		CA02732E2B24C86F0086C353 /* WebOSResponseVolumeStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSResponseVolumeStatus.swift; sourceTree = "<group>"; };
 		CA033FAB2B28ACE000445041 /* WebOSResponseApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSResponseApplication.swift; sourceTree = "<group>"; };
 		CA033FAD2B30060300445041 /* Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codable.swift; sourceTree = "<group>"; };
+		CA033FB12B3041C600445041 /* WebOSKeyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSKeyType.swift; sourceTree = "<group>"; };
+		CA033FB32B30448600445041 /* WebOSKeyTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSKeyTarget.swift; sourceTree = "<group>"; };
+		CA033FB52B3044F800445041 /* WebOSKeyTargetProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSKeyTargetProtocol.swift; sourceTree = "<group>"; };
+		CA033FB72B30454500445041 /* WebOSKeyTargetExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSKeyTargetExtension.swift; sourceTree = "<group>"; };
 		CA11DA9B2B256ED000994FCA /* SoundOutputType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundOutputType.swift; sourceTree = "<group>"; };
 		CA30AC5B2B2019CD00254F4F /* WebOSResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSResponse.swift; sourceTree = "<group>"; };
 		CA30AC5F2B2019FD00254F4F /* WebOSRequestManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSRequestManifest.swift; sourceTree = "<group>"; };
@@ -86,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				CA11DA9B2B256ED000994FCA /* SoundOutputType.swift */,
+				CA033FB12B3041C600445041 /* WebOSKeyType.swift */,
 				CAA0AF892B2367DF00A8E578 /* RequestType.swift */,
 				CA4C2F432B232D5800A218D4 /* ResponseType.swift */,
 			);
@@ -97,6 +106,7 @@
 			children = (
 				CA0273232B2471D00086C353 /* Extensions */,
 				CA0273202B2471920086C353 /* Protocols */,
+				CA033FB32B30448600445041 /* WebOSKeyTarget.swift */,
 				CA76C1A22B20A779000B451C /* WebOSTarget.swift */,
 			);
 			path = Targets;
@@ -106,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				CA02731E2B2471720086C353 /* WebOSTargetProtocol.swift */,
+				CA033FB52B3044F800445041 /* WebOSKeyTargetProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -113,6 +124,7 @@
 		CA0273232B2471D00086C353 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				CA033FB72B30454500445041 /* WebOSKeyTargetExtension.swift */,
 				CA0273212B2471C10086C353 /* WebOSTargetExtension.swift */,
 			);
 			path = Extensions;
@@ -275,8 +287,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA0273282B2472600086C353 /* WebOSClientDelegate.swift in Sources */,
+				CA033FB82B30454500445041 /* WebOSKeyTargetExtension.swift in Sources */,
 				CA02732F2B24C86F0086C353 /* WebOSResponseVolumeStatus.swift in Sources */,
 				CA30AC602B2019FD00254F4F /* WebOSRequestManifest.swift in Sources */,
+				CA033FB22B3041C600445041 /* WebOSKeyType.swift in Sources */,
 				CAA0AF882B21FAAB00A8E578 /* Message.swift in Sources */,
 				CA76C1972B1AFE6D000B451C /* WebOSRequest.swift in Sources */,
 				CA76C1A32B20A779000B451C /* WebOSTarget.swift in Sources */,
@@ -291,12 +305,14 @@
 				CA0273222B2471C10086C353 /* WebOSTargetExtension.swift in Sources */,
 				CA02732B2B24729F0086C353 /* WebOSClient+URLSessionDelegate.swift in Sources */,
 				CA30AC642B201A3D00254F4F /* WebOSRequestSigned.swift in Sources */,
+				CA033FB42B30448600445041 /* WebOSKeyTarget.swift in Sources */,
 				CAA0AF8A2B2367DF00A8E578 /* RequestType.swift in Sources */,
 				CA9403142B1785AA00260910 /* main.swift in Sources */,
 				CA76C1A12B1F5931000B451C /* String.swift in Sources */,
 				CA94031D2B17864700260910 /* WebOSClient.swift in Sources */,
 				CA033FAC2B28ACE000445041 /* WebOSResponseApplication.swift in Sources */,
 				CA30AC662B201A7800254F4F /* WebOSRequestPayload.swift in Sources */,
+				CA033FB62B3044F800445041 /* WebOSKeyTargetProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

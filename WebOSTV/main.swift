@@ -104,6 +104,14 @@ class Application {
                 if let request = readLine() {
                     webOSClient.send(request)
                 }
+            case "key_click":
+                webOSClient.sendKey(.click)
+            case "key_move":
+                webOSClient.sendKey(.move(dx: -550, dy: -200))
+            case "key_scroll":
+                webOSClient.sendKey(.scroll(dx: 0, dy: 50))
+            case "key_home":
+                webOSClient.sendKey(.home)
             default:
                 webOSClient.send(.notify(message: input))
             }

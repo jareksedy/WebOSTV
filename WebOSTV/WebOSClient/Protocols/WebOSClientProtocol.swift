@@ -11,6 +11,8 @@ protocol WebOSClientProtocol {
     var delegate: WebOSClientDelegate? { get set }
     @discardableResult func send(_ target: WebOSTarget, id: String) -> String?
     func send(_ jsonRequest: String)
+    func sendKey(_ key: WebOSKeyTarget)
+    func sendKey(_ data: Data)
     func disconnect(with closeCode: URLSessionWebSocketTask.CloseCode)
 }
 
