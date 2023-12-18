@@ -29,7 +29,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     
     @discardableResult
     func send(_ target: WebOSTarget) -> String? {
-        guard let json = target.json,
+        guard let json = target.request.json,
               let requestId = json.extractId() else {
             return nil
         }

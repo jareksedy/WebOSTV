@@ -30,7 +30,9 @@ class Application {
             case "getVolume":
                 webOSClient.send(.getVolume())
             case "getVolume subscribe":
-                webOSClient.send(.getVolume(subscribe: true))
+                webOSClient.send(.getVolume(id: "volumeSubscription", subscribe: true))
+            case "getVolume unsubscribe":
+                webOSClient.send(.getVolume(id: "volumeSubscription", subscribe: false))
             case "setVolume":
                 print("Volume: ", terminator: "")
                 if let volume = Int(readLine()!) {
@@ -73,7 +75,9 @@ class Application {
             case "getForegroundApp":
                 webOSClient.send(.getForegroundApp())
             case "getForegroundApp subscribe":
-                webOSClient.send(.getForegroundApp(subscribe: true))
+                webOSClient.send(.getForegroundApp(id: "appSubscription", subscribe: true))
+            case "getForegroundApp unsubscribe":
+                webOSClient.send(.getForegroundApp(id: "appSubscription", subscribe: false))
             case "launchApp":
                 print("AppId: ", terminator: "")
                 if let appId = readLine() {
@@ -93,6 +97,8 @@ class Application {
                 webOSClient.send(.sendEnterKey)
             case "delete":
                 webOSClient.send(.deleteCharacters())
+            case "getPointerInputSocket":
+                webOSClient.send(.getPointerInputSocket)
             default:
                 webOSClient.send(.notify(message: input))
             }

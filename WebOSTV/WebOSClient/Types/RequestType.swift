@@ -11,5 +11,6 @@ enum RequestType: String {
     case register
     case request
     case subscribe
+    case unsubscribe
     case unknown
 }

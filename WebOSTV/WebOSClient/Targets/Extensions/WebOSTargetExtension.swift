@@ -7,11 +7,7 @@
 
 import Foundation
 
-extension WebOSTarget: WebOSTargetProtocol {
-    var uuid: String {
-        return UUID().uuidString.lowercased()
-    }
-    
+extension WebOSTarget: WebOSTargetProtocol {    
     var uri: String? {
         switch self {
         case .volumeUp:
@@ -62,6 +58,8 @@ extension WebOSTarget: WebOSTargetProtocol {
             return "ssap://com.webos.service.ime/sendEnterKey"
         case .deleteCharacters:
             return "ssap://com.webos.service.ime/deleteCharacters"
+        case .getPointerInputSocket:
+            return "ssap://com.webos.service.networkinput/getPointerInputSocket"
         default:
             return nil
         }
@@ -76,57 +74,45 @@ extension WebOSTarget: WebOSTargetProtocol {
                 pairingType: .prompt,
                 clientKey: clientKey
             )
-            return .init(type: .register, id: uuid, payload: payload)
-        case .getVolume(let subscribe):
-            return .init(type: subscribe ? .subscribe : .request, id: uuid, uri: uri)
+            return .init(type: .register, payload: payload)
+        case .getVolume(let id, let subscribe), .getSoundOutput(let id, let subscribe), .getForegroundApp(let id, let subscribe):
+            if let subscribe {
+                return .init(type: subscribe ? .subscribe : .unsubscribe, id: id, uri: uri)
+            }
+            return .init(type: .request, uri: uri)
         case .setVolume(let volume):
             let payload = WebOSRequestPayload(volume: volume)
-            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+            return .init(type: .request, uri: uri, payload: payload)
         case .setMute(let mute):
             let payload = WebOSRequestPayload(mute: mute)
-            return .init(type: .request, id: uuid, uri: uri, payload: payload)
-        case .getSoundOutput(let subscribe):
-            return .init(type: subscribe ? .subscribe : .request, id: uuid, uri: uri)
+            return .init(type: .request, uri: uri, payload: payload)
         case .changeSoundOutput(let soundOutput):
             let payload = WebOSRequestPayload(output: soundOutput.rawValue)
-            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+            return .init(type: .request, uri: uri, payload: payload)
         case .notify(let message, let iconData, let iconExtension):
             let payload = WebOSRequestPayload(
                 message: message,
                 iconData: iconData,
                 iconExtension: iconExtension
             )
-            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+            return .init(type: .request, uri: uri, payload: payload)
         case .screenOn, .screenOff:
             let payload = WebOSRequestPayload(standbyMode: "active")
-            return .init(type: .request, id: uuid, uri: uri, payload: payload)
-        case .getForegroundApp(let subscribe):
-            return .init(type: subscribe ? .subscribe : .request, id: uuid, uri: uri)
+            return .init(type: .request, uri: uri, payload: payload)
         case .launchApp(let appId, let contentId, let params):
             let payload = WebOSRequestPayload(id: appId, contentId: contentId, params: params)
-            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+            return .init(type: .request, uri: uri, payload: payload)
         case .closeApp(let appId, let sessionId):
             let payload = WebOSRequestPayload(id: appId, sessionId: sessionId)
-            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+            return .init(type: .request, uri: uri, payload: payload)
         case .insertText(let text, let replace):
             let payload = WebOSRequestPayload(text: text, replace: replace)
-            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+            return .init(type: .request, uri: uri, payload: payload)
         case .deleteCharacters(let count):
             let payload = WebOSRequestPayload(count: count)
-            return .init(type: .request, id: uuid, uri: uri, payload: payload)
+            return .init(type: .request, uri: uri, payload: payload)
         default:
-            return .init(type: .request, id: uuid, uri: uri)
+            return .init(type: .request, uri: uri)
         }
-    }
-    
-    var json: String? {
-        let encoder = JSONEncoder()
-        do {
-            let jsonData = try encoder.encode(request)
-            if let jsonString = String(data: jsonData, encoding: .utf8) { return jsonString }
-        } catch {
-            print("Error encoding JSON: \(error)")
-        }
-        return nil
     }
 }

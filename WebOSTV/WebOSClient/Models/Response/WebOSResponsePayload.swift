@@ -39,6 +39,7 @@ struct WebOSResponsePayload: Codable {
     let windowId: String?
     let id: String?
     let sessionId: String?
+    let socketPath: String?
     
     enum CodingKeys: String, CodingKey {
         case pairingType
@@ -72,5 +73,6 @@ struct WebOSResponsePayload: Codable {
         case windowId
         case id
         case sessionId
+        case socketPath
     }
 }

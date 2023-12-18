@@ -13,7 +13,7 @@ enum WebOSTarget {
     // Audio
     case volumeUp
     case volumeDown
-    case getVolume(subscribe: Bool = false)
+    case getVolume(id: String? = nil, subscribe: Bool? = nil)
     case setVolume(Int)
     case setMute(Bool)
     case play
@@ -21,7 +21,7 @@ enum WebOSTarget {
     case stop
     case rewind
     case fastForward
-    case getSoundOutput(subscribe: Bool = false)
+    case getSoundOutput(id: String? = nil, subscribe: Bool? = nil)
     case changeSoundOutput(SoundOutputType)
     // System
     case notify(message: String, iconData: Data? = nil, iconExtension: String? = nil)
@@ -31,11 +31,12 @@ enum WebOSTarget {
     case turnOff
     // Apps
     case listApps
-    case getForegroundApp(subscribe: Bool = false)
+    case getForegroundApp(id: String? = nil, subscribe: Bool? = nil)
     case launchApp(appId: String, contentId: String? = nil, params: String? = nil)
     case closeApp(appId: String, sessionId: String? = nil)
     // Input
     case insertText(text: String, replace: Int = 0)
     case sendEnterKey
     case deleteCharacters(count: Int = 1)
+    case getPointerInputSocket
 }
