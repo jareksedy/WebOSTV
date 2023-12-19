@@ -35,21 +35,13 @@ class WebOSClient: NSObject, WebOSClientProtocol {
             return nil
         }
         let message = URLSessionWebSocketTask.Message.string(json)
-        commonWebSocketTask?.send(message) { error in
-            if let error = error {
-                print(error)
-            }
-        }
+        sendURLSessionWebSocketTaskMessage(message, task: commonWebSocketTask)
         return id
     }
     
     func send(_ jsonRequest: String) {
         let message = URLSessionWebSocketTask.Message.string(jsonRequest)
-        commonWebSocketTask?.send(message) { error in
-            if let error = error {
-                print(error)
-            }
-        }
+        sendURLSessionWebSocketTaskMessage(message, task: commonWebSocketTask)
     }
     
     func sendKey(_ key: WebOSKeyTarget) {
@@ -57,20 +49,12 @@ class WebOSClient: NSObject, WebOSClientProtocol {
             return
         }
         let message = URLSessionWebSocketTask.Message.data(request)
-        pointerWebSocketTask?.send(message) { error in
-            if let error = error {
-                print(error)
-            }
-        }
+        sendURLSessionWebSocketTaskMessage(message, task: pointerWebSocketTask)
     }
     
     func sendKey(_ data: Data) {
         let message = URLSessionWebSocketTask.Message.data(data)
-        pointerWebSocketTask?.send(message) { error in
-            if let error = error {
-                print(error)
-            }
-        }
+        sendURLSessionWebSocketTaskMessage(message, task: pointerWebSocketTask)
     }
     
     func disconnect(
@@ -86,6 +70,17 @@ class WebOSClient: NSObject, WebOSClientProtocol {
 }
 
 private extension WebOSClient {
+    func sendURLSessionWebSocketTaskMessage(
+        _ message: URLSessionWebSocketTask.Message,
+        task: URLSessionWebSocketTask?
+    ) {
+        task?.send(message) { error in
+            if let error = error {
+                print(error)
+            }
+        }
+    }
+    
     func listen(
         _ completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) {

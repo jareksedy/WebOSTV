@@ -102,6 +102,34 @@ extension WebOSKeyTarget: WebOSKeyTargetProtocol {
         }
     }
     
+    var dictionaryRepresentation: [String: Any]? {
+            switch self {
+            case .move(let dx, let dy, let down):
+                return [
+                    "type": type.rawValue,
+                    "dx": dx,
+                    "dy": dy,
+                    "down": down
+                ]
+            case .scroll(let dx, let dy):
+                return [
+                    "type": type.rawValue,
+                    "dx": dx,
+                    "dy": dy
+                ]
+            default:
+                if let name = name {
+                    return [
+                        "type": type.rawValue,
+                        "name": name
+                    ]
+                }
+                return [
+                    "type": type.rawValue
+                ]
+            }
+        }
+    
     var request: Data? {
         switch self {
         case .move(let dx, let dy, let down):
