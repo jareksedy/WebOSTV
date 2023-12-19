@@ -12,6 +12,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     private var commonWebSocketTask: URLSessionWebSocketTask?
     private var pointerWebSocketTask: URLSessionWebSocketTask?
     private var pointerRequestId: String?
+    var isConnected: Bool = false
     weak var delegate: WebOSClientDelegate?
     
     init(url: URL?, delegate: WebOSClientDelegate? = nil) {
@@ -21,11 +22,12 @@ class WebOSClient: NSObject, WebOSClientProtocol {
             return
         }
         self.delegate = delegate
+        connect(url: url)
+    }
+    
+    func connect(url: URL) {
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         connect(url, task: &commonWebSocketTask)
-        listen { [weak self] result in
-            self?.delegate?.didReceive(result)
-        }
     }
     
     @discardableResult
@@ -136,5 +138,27 @@ private extension WebOSClient {
             }
             completion(.success(response))
         }
+    }
+}
+
+extension WebOSClient: URLSessionWebSocketDelegate {
+    func urlSession(
+        _ session: URLSession,
+        webSocketTask: URLSessionWebSocketTask,
+        didOpenWithProtocol protocol: String?
+    ) {
+        isConnected = true
+        listen { [weak self] result in
+            self?.delegate?.didReceive(result)
+        }
+    }
+
+    func urlSession(
+        _ session: URLSession,
+        webSocketTask: URLSessionWebSocketTask,
+        didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
+        reason: Data?
+    ) {
+        isConnected = false
     }
 }

@@ -9,6 +9,8 @@ import Foundation
 
 protocol WebOSClientProtocol {
     var delegate: WebOSClientDelegate? { get set }
+    var isConnected: Bool { get }
+    func connect(url: URL)
     @discardableResult func send(_ target: WebOSTarget, id: String) -> String?
     func send(_ jsonRequest: String)
     func sendKey(_ key: WebOSKeyTarget)
