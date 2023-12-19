@@ -8,7 +8,6 @@
 import Foundation
 
 protocol WebOSKeyTargetProtocol {
-    var name: String? { get }
-    var type: WebOSKeyType { get }
+    var name: String { get }
     var request: Data? { get }
 }
