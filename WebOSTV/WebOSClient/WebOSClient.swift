@@ -95,10 +95,10 @@ private extension WebOSClient {
             switch result {
             case .success(let response):
                 self?.handle(response, completion: completion)
-                self?.listen(completion)
             case .failure(let error):
                 completion(.failure(error))
             }
+            self?.listen(completion)
         }
     }
     
