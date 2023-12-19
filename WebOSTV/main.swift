@@ -17,12 +17,21 @@ class Application {
     
     func run() {
         webOSClient.delegate = self
-        
+        webOSClient.connect()
         let clientKey = UserDefaults.standard.value(forKey: "clientKey") as? String
-        webOSClient.send(.connect(clientKey: clientKey))
+        webOSClient.send(.register(clientKey: clientKey))
         
         while let input = readLine(), input != "exit" {
             switch input {
+            case "_clearClientKey":
+                UserDefaults.standard.setValue(nil, forKey: "clientKey")
+                print("clientKey set to nil!")
+            case "_connect":
+                webOSClient.connect()
+                let clientKey = UserDefaults.standard.value(forKey: "clientKey") as? String
+                webOSClient.send(.register(clientKey: clientKey))
+            case "_disconnect":
+                webOSClient.disconnect(with: .goingAway)
             case "volumeUp":
                 webOSClient.send(.volumeUp)
             case "volumeDown":
@@ -142,6 +151,10 @@ class Application {
                 webOSClient.sendKey(.blue)
             case "key_yellow":
                 webOSClient.sendKey(.yellow)
+            case "key_info":
+                webOSClient.sendKey(.info)
+            case "key_menu":
+                webOSClient.sendKey(.menu)
             default:
                 webOSClient.send(.notify(message: input))
             }
@@ -152,11 +165,22 @@ class Application {
 }
 
 extension Application: WebOSClientDelegate {
-    func didPrompt() {
-        print("Please accept connection on the TV.")
+    func didConnect(with task: URLSessionWebSocketTask) {
+        print("Connected. Task: \(task.description)")
     }
     
-    func didConnect(with clientKey: String) {
+    func didDisconnect(
+        task: URLSessionWebSocketTask,
+        closeCode: URLSessionWebSocketTask.CloseCode
+    ) {
+        print("Disconnected. Task: \(task.description). Code: \(closeCode)")
+    }
+    
+    func didPrompt() {
+        print("Please accept registration prompt on the TV.")
+    }
+    
+    func didRegister(with clientKey: String) {
         print("Registered with client key: \(clientKey)")
         UserDefaults.standard.setValue(clientKey, forKey: "clientKey")
     }
@@ -178,9 +202,6 @@ extension Application: WebOSClientDelegate {
         }
     }
 }
-
-
-//UserDefaults.standard.setValue(nil, forKey: "clientKey")
 
 let url = URL(string: "wss://192.168.8.10:3001")
 let webOSClient = WebOSClient(url: url)

@@ -8,24 +8,24 @@
 import Foundation
 
 class WebOSClient: NSObject, WebOSClientProtocol {
+    private var url: URL?
     private var urlSession: URLSession?
     private var commonWebSocketTask: URLSessionWebSocketTask?
     private var pointerWebSocketTask: URLSessionWebSocketTask?
     private var pointerRequestId: String?
-    var isConnected: Bool = false
     weak var delegate: WebOSClientDelegate?
     
     init(url: URL?, delegate: WebOSClientDelegate? = nil) {
         super.init()
+        self.url = url
+        self.delegate = delegate
+    }
+    
+    func connect() {
         guard let url else {
             assertionFailure("Invalid device URL. Terminating.")
             return
         }
-        self.delegate = delegate
-        connect(url: url)
-    }
-    
-    func connect(url: URL) {
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         connect(url, task: &commonWebSocketTask)
     }
@@ -97,10 +97,10 @@ private extension WebOSClient {
             switch result {
             case .success(let response):
                 self?.handle(response, completion: completion)
+                self?.listen(completion)
             case .failure(let error):
                 completion(.failure(error))
             }
-            self?.listen(completion)
         }
     }
     
@@ -123,7 +123,7 @@ private extension WebOSClient {
             completion(.failure(NSError(domain: errorMessage, code: 0, userInfo: nil)))
         case .registered:
             if let clientKey = response.payload?.clientKey {
-                delegate?.didConnect(with: clientKey)
+                delegate?.didRegister(with: clientKey)
                 pointerRequestId = send(.getPointerInputSocket)
             }
             fallthrough
@@ -147,9 +147,11 @@ extension WebOSClient: URLSessionWebSocketDelegate {
         webSocketTask: URLSessionWebSocketTask,
         didOpenWithProtocol protocol: String?
     ) {
-        isConnected = true
-        listen { [weak self] result in
-            self?.delegate?.didReceive(result)
+        delegate?.didConnect(task: webSocketTask)
+        if webSocketTask === commonWebSocketTask {
+            listen { [weak self] result in
+                self?.delegate?.didReceive(result)
+            }
         }
     }
 
@@ -159,6 +161,6 @@ extension WebOSClient: URLSessionWebSocketDelegate {
         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
         reason: Data?
     ) {
-        isConnected = false
+        delegate?.didDisconnect(task: webSocketTask, closeCode: closeCode)
     }
 }

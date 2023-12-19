@@ -9,7 +9,7 @@ import Foundation
 
 enum WebOSTarget {
     // Connection
-    case connect(clientKey: String?)
+    case register(clientKey: String?)
     // Audio
     case volumeUp
     case volumeDown

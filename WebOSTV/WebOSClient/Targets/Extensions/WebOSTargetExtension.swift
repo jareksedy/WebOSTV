@@ -67,7 +67,7 @@ extension WebOSTarget: WebOSTargetProtocol {
     
     var request: WebOSRequest {
         switch self {
-        case .connect(let clientKey):
+        case .register(let clientKey):
             let payload = WebOSRequestPayload(
                 forcePairing: false,
                 manifest: WebOSRequestManifest(),
