@@ -22,7 +22,7 @@ enum WebOSTarget {
     case rewind
     case fastForward
     case getSoundOutput(subscribe: Bool? = nil)
-    case changeSoundOutput(SoundOutputType)
+    case changeSoundOutput(WebOSSoundOutputType)
     // System
     case notify(message: String, iconData: Data? = nil, iconExtension: String? = nil)
     case screenOff

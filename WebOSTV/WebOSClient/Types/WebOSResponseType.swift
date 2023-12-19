@@ -1,5 +1,5 @@
 //
-//  ResponseType.swift
+//  WebOSResponseType.swift
 //  WebOSTV
 //
 //  Created by Ярослав on 08.12.2023.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ResponseType: String {
+enum WebOSResponseType: String {
     case response
     case registered
     case error

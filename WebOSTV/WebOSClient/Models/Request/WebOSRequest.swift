@@ -14,7 +14,7 @@ struct WebOSRequest: Codable {
     var payload: WebOSRequestPayload?
     
     init(
-        type: RequestType,
+        type: WebOSRequestType,
         id: String? = nil,
         uri: String? = nil,
         payload: WebOSRequestPayload? = nil

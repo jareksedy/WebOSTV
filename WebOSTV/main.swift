@@ -59,7 +59,7 @@ class Application {
                 webOSClient.send(.getSoundOutput(subscribe: true))
             case "changeSoundOutput":
                 print("Output: ", terminator: "")
-                if let output = SoundOutputType(rawValue: String(readLine()!)) {
+                if let output = WebOSSoundOutputType(rawValue: String(readLine()!)) {
                     webOSClient.send(.changeSoundOutput(output))
                 }
             case "screenOff":

@@ -111,7 +111,7 @@ private extension WebOSClient {
         }
         guard let response = response.decode(),
               let type = response.type,
-              let responseType = ResponseType(rawValue: type) else {
+              let responseType = WebOSResponseType(rawValue: type) else {
             completion(.failure(NSError(domain: "WebOSClient: Unkown response type.", code: 0)))
             return
         }

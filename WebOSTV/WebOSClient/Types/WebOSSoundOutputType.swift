@@ -1,5 +1,5 @@
 //
-//  SoundOutputType.swift
+//  WebOSSoundOutputType.swift
 //  WebOSTV
 //
 //  Created by Ярослав on 10.12.2023.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum SoundOutputType: String {
+enum WebOSSoundOutputType: String {
     case tv_speaker
     case external_speaker
     case soundbar
