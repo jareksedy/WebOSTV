@@ -1,5 +1,5 @@
 //
-//  Message+.swift
+//  MessageExtension.swift
 //  WebOSTV
 //
 //  Created by Ярослав on 07.12.2023.

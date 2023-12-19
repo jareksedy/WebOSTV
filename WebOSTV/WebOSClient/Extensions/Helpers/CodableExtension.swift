@@ -1,5 +1,5 @@
 //
-//  Encodable+encode.swift
+//  CodableExtension.swift
 //  WebOSTV
 //
 //  Created by Ярослав on 18.12.2023.
