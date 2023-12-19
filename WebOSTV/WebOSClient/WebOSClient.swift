@@ -9,7 +9,7 @@ import Foundation
 
 class WebOSClient: NSObject, WebOSClientProtocol {
     private var urlSession: URLSession?
-    private var webSocketTask: URLSessionWebSocketTask?
+    private var commonWebSocketTask: URLSessionWebSocketTask?
     private var pointerWebSocketTask: URLSessionWebSocketTask?
     private var pointerRequestId: String?
     weak var delegate: WebOSClientDelegate?
@@ -22,8 +22,8 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         }
         self.delegate = delegate
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        webSocketTask = urlSession?.webSocketTask(with: url)
-        webSocketTask?.resume()
+        commonWebSocketTask = urlSession?.webSocketTask(with: url)
+        commonWebSocketTask?.resume()
         listen { [weak self] result in
             self?.delegate?.didReceive(result)
         }
@@ -35,7 +35,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
             return nil
         }
         let message = URLSessionWebSocketTask.Message.string(json)
-        webSocketTask?.send(message) { error in
+        commonWebSocketTask?.send(message) { error in
             if let error = error {
                 print(error)
             }
@@ -45,7 +45,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     
     func send(_ jsonRequest: String) {
         let message = URLSessionWebSocketTask.Message.string(jsonRequest)
-        webSocketTask?.send(message) { error in
+        commonWebSocketTask?.send(message) { error in
             if let error = error {
                 print(error)
             }
@@ -77,7 +77,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         with closeCode: URLSessionWebSocketTask.CloseCode = .goingAway
     ) {
         pointerWebSocketTask?.cancel(with: closeCode, reason: nil)
-        webSocketTask?.cancel(with: closeCode, reason: nil)
+        commonWebSocketTask?.cancel(with: closeCode, reason: nil)
     }
     
     deinit {
@@ -89,7 +89,7 @@ private extension WebOSClient {
     func listen(
         _ completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) {
-        webSocketTask?.receive { [weak self] result in
+        commonWebSocketTask?.receive { [weak self] result in
             switch result {
             case .success(let response):
                 self?.handle(response, completion: completion)
