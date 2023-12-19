@@ -22,8 +22,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         }
         self.delegate = delegate
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        commonWebSocketTask = urlSession?.webSocketTask(with: url)
-        commonWebSocketTask?.resume()
+        connect(url, task: &commonWebSocketTask)
         listen { [weak self] result in
             self?.delegate?.didReceive(result)
         }
@@ -70,13 +69,21 @@ class WebOSClient: NSObject, WebOSClientProtocol {
 }
 
 private extension WebOSClient {
+    func connect(
+        _ url: URL,
+        task: inout URLSessionWebSocketTask?
+    ) {
+        task = urlSession?.webSocketTask(with: url)
+        task?.resume()
+    }
+    
     func sendURLSessionWebSocketTaskMessage(
         _ message: URLSessionWebSocketTask.Message,
         task: URLSessionWebSocketTask?
     ) {
-        task?.send(message) { error in
+        task?.send(message) { [weak self] error in
             if let error = error {
-                print(error)
+                self?.delegate?.didReceive(.failure(error))
             }
         }
     }
@@ -125,14 +132,9 @@ private extension WebOSClient {
             if let socketPath = response.payload?.socketPath,
                let url = URL(string: socketPath),
                response.id == pointerRequestId {
-                connectToPointerWebSocket(url)
+                connect(url, task: &pointerWebSocketTask)
             }
             completion(.success(response))
         }
-    }
-    
-    func connectToPointerWebSocket(_ url: URL) {
-        pointerWebSocketTask = urlSession?.webSocketTask(with: url)
-        pointerWebSocketTask?.resume()
     }
 }
