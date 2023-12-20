@@ -155,6 +155,12 @@ class Application {
                 webOSClient.sendKey(.info)
             case "key_menu":
                 webOSClient.sendKey(.menu)
+            case "key_volumeUp":
+                webOSClient.sendKey(.volumeUp)
+            case "key_volumeDown":
+                webOSClient.sendKey(.volumeDown)
+            case "key_mute":
+                webOSClient.sendKey(.mute)
             default:
                 webOSClient.send(.notify(message: input))
             }
@@ -169,11 +175,12 @@ extension Application: WebOSClientDelegate {
         print("Connected. Task: \(task.description)")
     }
     
-    func didDisconnect(
-        task: URLSessionWebSocketTask,
-        closeCode: URLSessionWebSocketTask.CloseCode
-    ) {
-        print("Disconnected. Task: \(task.description). Code: \(closeCode)")
+    func didDisconnect(with error: Error?) {
+        if let error {
+            print("Disconnected with error: \(error.localizedDescription).")
+        } else {
+            print("Disconnected. No errors.")
+        }
     }
     
     func didPrompt() {

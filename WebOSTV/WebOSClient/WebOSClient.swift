@@ -10,8 +10,8 @@ import Foundation
 class WebOSClient: NSObject, WebOSClientProtocol {
     private var url: URL?
     private var urlSession: URLSession?
-    private var commonWebSocketTask: URLSessionWebSocketTask?
-    private var pointerWebSocketTask: URLSessionWebSocketTask?
+    private var primaryWebSocketTask: URLSessionWebSocketTask?
+    private var secondaryWebSocketTask: URLSessionWebSocketTask?
     private var pointerRequestId: String?
     weak var delegate: WebOSClientDelegate?
     
@@ -27,7 +27,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
             return
         }
         urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        connect(url, task: &commonWebSocketTask)
+        connect(url, task: &primaryWebSocketTask)
     }
     
     @discardableResult
@@ -36,13 +36,13 @@ class WebOSClient: NSObject, WebOSClientProtocol {
             return nil
         }
         let message = URLSessionWebSocketTask.Message.string(json)
-        sendURLSessionWebSocketTaskMessage(message, task: commonWebSocketTask)
+        sendURLSessionWebSocketTaskMessage(message, task: primaryWebSocketTask)
         return id
     }
     
     func send(_ jsonRequest: String) {
         let message = URLSessionWebSocketTask.Message.string(jsonRequest)
-        sendURLSessionWebSocketTaskMessage(message, task: commonWebSocketTask)
+        sendURLSessionWebSocketTaskMessage(message, task: primaryWebSocketTask)
     }
     
     func sendKey(_ key: WebOSKeyTarget) {
@@ -50,19 +50,19 @@ class WebOSClient: NSObject, WebOSClientProtocol {
             return
         }
         let message = URLSessionWebSocketTask.Message.data(request)
-        sendURLSessionWebSocketTaskMessage(message, task: pointerWebSocketTask)
+        sendURLSessionWebSocketTaskMessage(message, task: secondaryWebSocketTask)
     }
     
     func sendKey(_ data: Data) {
         let message = URLSessionWebSocketTask.Message.data(data)
-        sendURLSessionWebSocketTaskMessage(message, task: pointerWebSocketTask)
+        sendURLSessionWebSocketTaskMessage(message, task: secondaryWebSocketTask)
     }
     
     func disconnect(
         with closeCode: URLSessionWebSocketTask.CloseCode = .goingAway
     ) {
-        pointerWebSocketTask?.cancel(with: closeCode, reason: nil)
-        commonWebSocketTask?.cancel(with: closeCode, reason: nil)
+        secondaryWebSocketTask?.cancel(with: closeCode, reason: nil)
+        primaryWebSocketTask?.cancel(with: closeCode, reason: nil)
     }
     
     deinit {
@@ -84,7 +84,7 @@ private extension WebOSClient {
         task: URLSessionWebSocketTask?
     ) {
         task?.send(message) { [weak self] error in
-            if let error = error {
+            if let error {
                 self?.delegate?.didReceive(.failure(error))
             }
         }
@@ -93,7 +93,7 @@ private extension WebOSClient {
     func listen(
         _ completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) {
-        commonWebSocketTask?.receive { [weak self] result in
+        primaryWebSocketTask?.receive { [weak self] result in
             switch result {
             case .success(let response):
                 self?.handle(response, completion: completion)
@@ -134,7 +134,7 @@ private extension WebOSClient {
             if let socketPath = response.payload?.socketPath,
                let url = URL(string: socketPath),
                response.id == pointerRequestId {
-                connect(url, task: &pointerWebSocketTask)
+                connect(url, task: &secondaryWebSocketTask)
             }
             completion(.success(response))
         }
@@ -157,11 +157,12 @@ extension WebOSClient: URLSessionWebSocketDelegate {
         webSocketTask: URLSessionWebSocketTask,
         didOpenWithProtocol protocol: String?
     ) {
-        delegate?.didConnect(task: webSocketTask)
-        if webSocketTask === commonWebSocketTask {
-            listen { [weak self] result in
-                self?.delegate?.didReceive(result)
-            }
+        guard webSocketTask === primaryWebSocketTask else {
+            return
+        }
+        delegate?.didConnect()
+        listen { [weak self] result in
+            self?.delegate?.didReceive(result)
         }
     }
 
@@ -171,6 +172,9 @@ extension WebOSClient: URLSessionWebSocketDelegate {
         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
         reason: Data?
     ) {
-        delegate?.didDisconnect(task: webSocketTask, closeCode: closeCode)
+        guard webSocketTask === primaryWebSocketTask else {
+            return
+        }
+        delegate?.didDisconnect(with: nil)
     }
 }
