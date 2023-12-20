@@ -139,6 +139,16 @@ private extension WebOSClient {
             completion(.success(response))
         }
     }
+    
+    func handleError(_ error: Error?, task: URLSessionWebSocketTask) {
+        if let error = error as NSError? {
+            if error.code == 57 || error.code == 60 || error.code == 54 {
+                disconnect(with: .abnormalClosure)
+            } else {
+                delegate?.didReceive(.failure(error))
+            }
+        }
+    }
 }
 
 extension WebOSClient: URLSessionWebSocketDelegate {
