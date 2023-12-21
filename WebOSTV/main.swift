@@ -31,7 +31,7 @@ class Application {
                 let clientKey = UserDefaults.standard.value(forKey: "clientKey") as? String
                 webOSClient.send(.register(clientKey: clientKey))
             case "_disconnect":
-                webOSClient.disconnect(with: .goingAway)
+                webOSClient.disconnect(error: nil)
             case "volumeUp":
                 webOSClient.send(.volumeUp)
             case "volumeDown":
@@ -166,7 +166,7 @@ class Application {
             }
             
         }
-        webOSClient.disconnect(with: .goingAway)
+        webOSClient.disconnect(error: nil)
     }
 }
 
@@ -177,9 +177,9 @@ extension Application: WebOSClientDelegate {
     
     func didDisconnect(with error: Error?) {
         if let error {
-            print("Disconnected with error: \(error.localizedDescription).")
+            print("Disconnected with error. Reconnect [Y/N]?")
         } else {
-            print("Disconnected. No errors.")
+            print("Normally disconnected.")
         }
     }
     

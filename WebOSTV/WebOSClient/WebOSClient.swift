@@ -58,11 +58,10 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         sendURLSessionWebSocketTaskMessage(message, task: secondaryWebSocketTask)
     }
     
-    func disconnect(
-        with closeCode: URLSessionWebSocketTask.CloseCode = .goingAway
-    ) {
-        secondaryWebSocketTask?.cancel(with: closeCode, reason: nil)
-        primaryWebSocketTask?.cancel(with: closeCode, reason: nil)
+    func disconnect(error: Error? = nil) {
+        secondaryWebSocketTask?.cancel(with: .goingAway, reason: nil)
+        primaryWebSocketTask?.cancel(with: .goingAway, reason: nil)
+        delegate?.didDisconnect(with: error)
     }
     
     deinit {
@@ -85,7 +84,7 @@ private extension WebOSClient {
     ) {
         task?.send(message) { [weak self] error in
             if let error {
-                self?.delegate?.didReceive(.failure(error))
+                self?.handleError(error)
             }
         }
     }
@@ -99,7 +98,7 @@ private extension WebOSClient {
                 self?.handle(response, completion: completion)
                 self?.listen(completion)
             case .failure(let error):
-                completion(.failure(error))
+                self?.handleError(error)
             }
         }
     }
@@ -140,10 +139,10 @@ private extension WebOSClient {
         }
     }
     
-    func handleError(_ error: Error?, task: URLSessionWebSocketTask) {
+    func handleError(_ error: Error?) {
         if let error = error as NSError? {
             if error.code == 57 || error.code == 60 || error.code == 54 {
-                disconnect(with: .abnormalClosure)
+                delegate?.didDisconnect(with: error)
             } else {
                 delegate?.didReceive(.failure(error))
             }

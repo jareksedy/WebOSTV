@@ -14,7 +14,7 @@ protocol WebOSClientProtocol {
     func send(_ jsonRequest: String)
     func sendKey(_ key: WebOSKeyTarget)
     func sendKey(_ data: Data)
-    func disconnect(with closeCode: URLSessionWebSocketTask.CloseCode)
+    func disconnect(error: Error?)
 }
 
 extension WebOSClientProtocol {
