@@ -171,13 +171,13 @@ class Application {
 }
 
 extension Application: WebOSClientDelegate {
-    func didConnect(with task: URLSessionWebSocketTask) {
-        print("Connected. Task: \(task.description)")
+    func didConnect() {
+        print("Connected.")
     }
     
-    func didDisconnect(with error: Error?) {
-        if let error {
-            print("Disconnected with error. Reconnect [Y/N]?")
+    func didDisconnect(_ error: Error?) {
+        if error != nil {
+            print("DISCONNECTED ABNORMALLY. ERROR CODE: \((error as NSError?)?.code ?? -666) RECONNECT SUGGESTED.")
         } else {
             print("Normally disconnected.")
         }
