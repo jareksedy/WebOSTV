@@ -10,6 +10,7 @@ import Foundation
 class Application {
     var webOSClient: WebOSClientProtocol
     var listAppsId: String?
+    var isConnected: Bool = false
     
     init(webOSClient: WebOSClientProtocol) {
         self.webOSClient = webOSClient
@@ -173,14 +174,12 @@ class Application {
 extension Application: WebOSClientDelegate {
     func didConnect() {
         print("Connected.")
+        isConnected = true
     }
     
-    func didDisconnect(_ error: Error?) {
-        if error != nil {
-            print("DISCONNECTED ABNORMALLY. ERROR CODE: \((error as NSError?)?.code ?? -666) RECONNECT SUGGESTED.")
-        } else {
-            print("Normally disconnected.")
-        }
+    func didDisconnect() {
+        print("Disconnected normally.")
+        isConnected = false
     }
     
     func didPrompt() {
@@ -205,7 +204,16 @@ extension Application: WebOSClientDelegate {
             }
             print(response)
         case .failure(let error):
-            print("Error received: \(error)")
+            guard isConnected else { return }
+            if let error = error as NSError? {
+                if error.code == 57 || error.code == 60 || error.code == 54 {
+                    let code = (error as NSError?)!.code
+                    print("DISCONNECTED ABNORMALLY. CODE: \(code) RECONNECT SUGGESTED.")
+                    webOSClient.disconnect(error: error)
+                } else {
+                    print("Error received: \(error.localizedDescription).")
+                }
+            }
         }
     }
 }

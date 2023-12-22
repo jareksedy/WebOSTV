@@ -83,7 +83,7 @@ private extension WebOSClient {
     ) {
         task?.send(message) { [weak self] error in
             if let error {
-                self?.handleError(error)
+                self?.delegate?.didReceive(.failure(error))
             }
         }
     }
@@ -97,7 +97,7 @@ private extension WebOSClient {
                 self?.handle(response, completion: completion)
                 self?.listen(completion)
             case .failure(let error):
-                self?.handleError(error)
+                self?.delegate?.didReceive(.failure(error))
             }
         }
     }
@@ -138,15 +138,15 @@ private extension WebOSClient {
         }
     }
     
-    func handleError(_ error: Error?) {
-        if let error = error as NSError? {
-            if error.code == 57 || error.code == 60 || error.code == 54 {
-                delegate?.didDisconnect(error)
-            } else {
-                delegate?.didReceive(.failure(error))
-            }
-        }
-    }
+//    func handleError(_ error: Error?) {
+//        if let error = error as NSError? {
+//            if error.code == 57 || error.code == 60 || error.code == 54 {
+//                delegate?.didDisconnect(error)
+//            } else {
+//                delegate?.didReceive(.failure(error))
+//            }
+//        }
+//    }
 }
 
 extension WebOSClient: URLSessionWebSocketDelegate {
@@ -173,7 +173,7 @@ extension WebOSClient: URLSessionWebSocketDelegate {
             return
         }
         if let error {
-            handleError(error)
+            delegate?.didReceive(.failure(error))
         }
     }
     

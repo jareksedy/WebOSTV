@@ -13,7 +13,7 @@ protocol WebOSClientDelegate: AnyObject {
     func didRegister(with clientKey: String)
     func didReceive(_ result: Result<WebOSResponse, Error>)
     func didReceive(_ json: String)
-    func didDisconnect(_ error: Error?)
+    func didDisconnect()
 }
 
 extension WebOSClientDelegate {
@@ -21,5 +21,5 @@ extension WebOSClientDelegate {
     func didPrompt() {}
     func didReceive(_ result: Result<WebOSResponse, Error>) {}
     func didReceive(_ json: String) {}
-    func didDisconnect(_ error: Error? = nil) { didDisconnect(error) }
+    func didDisconnect() {}
 }
