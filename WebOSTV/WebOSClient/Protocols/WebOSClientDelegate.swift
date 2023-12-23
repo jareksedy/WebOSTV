@@ -20,7 +20,6 @@ protocol WebOSClientDelegate: AnyObject {
 extension WebOSClientDelegate {
     func didConnect() {}
     func didPrompt() {}
-    func didReceive(_ result: Result<WebOSResponse, Error>) {}
     func didReceive(_ json: String) {}
     func didDisconnect() {}
 }
