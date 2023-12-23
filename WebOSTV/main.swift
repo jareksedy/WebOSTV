@@ -141,7 +141,7 @@ class Application {
                 webOSClient.sendKey(.up)
             case "key_down":
                 webOSClient.sendKey(.down)
-            case "key_ok":
+            case "key_enter":
                 webOSClient.sendKey(.enter)
             case "key_green":
                 webOSClient.sendKey(.green)
@@ -161,6 +161,18 @@ class Application {
                 webOSClient.sendKey(.volumeDown)
             case "key_mute":
                 webOSClient.sendKey(.mute)
+            case "channelUp":
+                webOSClient.send(.channelUp)
+            case "channelDown":
+                webOSClient.send(.channelDown)
+            case "listSources":
+                webOSClient.send(.listSources)
+            case "setSource":
+                print("SourceId: ", terminator: "")
+                if let sourceId = readLine() {
+                    webOSClient.send(.setSource(inputId: sourceId))
+                }
+                
             default:
                 webOSClient.send(.notify(message: input))
             }

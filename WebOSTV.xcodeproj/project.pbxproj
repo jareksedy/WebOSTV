@@ -33,6 +33,7 @@
 		CA94031D2B17864700260910 /* WebOSClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA94031C2B17864700260910 /* WebOSClient.swift */; };
 		CAA0AF882B21FAAB00A8E578 /* MessageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA0AF872B21FAAB00A8E578 /* MessageExtension.swift */; };
 		CAA0AF8A2B2367DF00A8E578 /* WebOSRequestType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA0AF892B2367DF00A8E578 /* WebOSRequestType.swift */; };
+		CAA8201D2B373A7A00C0D279 /* WebOSResponseDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAA8201C2B373A7A00C0D279 /* WebOSResponseDevice.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -75,6 +76,7 @@
 		CA94031C2B17864700260910 /* WebOSClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSClient.swift; sourceTree = "<group>"; };
 		CAA0AF872B21FAAB00A8E578 /* MessageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageExtension.swift; sourceTree = "<group>"; };
 		CAA0AF892B2367DF00A8E578 /* WebOSRequestType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSRequestType.swift; sourceTree = "<group>"; };
+		CAA8201C2B373A7A00C0D279 /* WebOSResponseDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebOSResponseDevice.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				CA30AC5B2B2019CD00254F4F /* WebOSResponse.swift */,
+				CAA8201C2B373A7A00C0D279 /* WebOSResponseDevice.swift */,
 				CA30AC672B201B1000254F4F /* WebOSResponsePayload.swift */,
 				CA033FAB2B28ACE000445041 /* WebOSResponseApplication.swift */,
 				CA02732E2B24C86F0086C353 /* WebOSResponseVolumeStatus.swift */,
@@ -287,6 +290,7 @@
 				CA033FB82B30454500445041 /* WebOSKeyTargetExtension.swift in Sources */,
 				CA02732F2B24C86F0086C353 /* WebOSResponseVolumeStatus.swift in Sources */,
 				CA30AC602B2019FD00254F4F /* WebOSRequestManifest.swift in Sources */,
+				CAA8201D2B373A7A00C0D279 /* WebOSResponseDevice.swift in Sources */,
 				CAA0AF882B21FAAB00A8E578 /* MessageExtension.swift in Sources */,
 				CA76C1972B1AFE6D000B451C /* WebOSRequest.swift in Sources */,
 				CA76C1A32B20A779000B451C /* WebOSTarget.swift in Sources */,
