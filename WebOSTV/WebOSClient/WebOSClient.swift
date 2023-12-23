@@ -58,6 +58,14 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         sendURLSessionWebSocketTaskMessage(message, task: secondaryWebSocketTask)
     }
     
+    func sendPing() {
+        primaryWebSocketTask?.sendPing { [weak self] error in
+            if let error {
+                self?.delegate?.didReceiveNetworkError(error)
+            }
+        }
+    }
+    
     func disconnect() {
         secondaryWebSocketTask?.cancel(with: .goingAway, reason: nil)
         primaryWebSocketTask?.cancel(with: .goingAway, reason: nil)

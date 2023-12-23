@@ -32,6 +32,8 @@ class Application {
                 webOSClient.send(.register(clientKey: clientKey))
             case "_disconnect":
                 webOSClient.disconnect()
+            case "_ping":
+                webOSClient.sendPing()
             case "volumeUp":
                 webOSClient.send(.volumeUp)
             case "volumeDown":
