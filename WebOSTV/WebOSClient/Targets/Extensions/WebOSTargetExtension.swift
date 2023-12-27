@@ -60,6 +60,14 @@ extension WebOSTarget: WebOSTargetProtocol {
             return "ssap://com.webos.service.ime/deleteCharacters"
         case .getPointerInputSocket:
             return "ssap://com.webos.service.networkinput/getPointerInputSocket"
+        case .channelUp:
+            return "ssap://tv/channelUp"
+        case .channelDown:
+            return "ssap://tv/channelDown"
+        case .listSources:
+            return "ssap://tv/getExternalInputList"
+        case .setSource:
+            return "ssap://tv/switchInput"
         default:
             return nil
         }
@@ -110,6 +118,9 @@ extension WebOSTarget: WebOSTargetProtocol {
             return .init(type: .request, uri: uri, payload: payload)
         case .deleteCharacters(let count):
             let payload = WebOSRequestPayload(count: count)
+            return .init(type: .request, uri: uri, payload: payload)
+        case .setSource(let inputId):
+            let payload = WebOSRequestPayload(inputId: inputId)
             return .init(type: .request, uri: uri, payload: payload)
         default:
             return .init(type: .request, uri: uri)

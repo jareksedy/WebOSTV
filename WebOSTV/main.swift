@@ -10,7 +10,6 @@ import Foundation
 class Application {
     var webOSClient: WebOSClientProtocol
     var listAppsId: String?
-    var isConnected: Bool = false
     
     init(webOSClient: WebOSClientProtocol) {
         self.webOSClient = webOSClient
@@ -32,7 +31,9 @@ class Application {
                 let clientKey = UserDefaults.standard.value(forKey: "clientKey") as? String
                 webOSClient.send(.register(clientKey: clientKey))
             case "_disconnect":
-                webOSClient.disconnect(error: nil)
+                webOSClient.disconnect()
+            case "_ping":
+                webOSClient.sendPing()
             case "volumeUp":
                 webOSClient.send(.volumeUp)
             case "volumeDown":
@@ -142,7 +143,7 @@ class Application {
                 webOSClient.sendKey(.up)
             case "key_down":
                 webOSClient.sendKey(.down)
-            case "key_ok":
+            case "key_enter":
                 webOSClient.sendKey(.enter)
             case "key_green":
                 webOSClient.sendKey(.green)
@@ -162,24 +163,34 @@ class Application {
                 webOSClient.sendKey(.volumeDown)
             case "key_mute":
                 webOSClient.sendKey(.mute)
+            case "channelUp":
+                webOSClient.send(.channelUp)
+            case "channelDown":
+                webOSClient.send(.channelDown)
+            case "listSources":
+                webOSClient.send(.listSources)
+            case "setSource":
+                print("SourceId: ", terminator: "")
+                if let sourceId = readLine() {
+                    webOSClient.send(.setSource(inputId: sourceId))
+                }
+                
             default:
                 webOSClient.send(.notify(message: input))
             }
             
         }
-        webOSClient.disconnect(error: nil)
+        webOSClient.disconnect()
     }
 }
 
 extension Application: WebOSClientDelegate {
     func didConnect() {
         print("Connected.")
-        isConnected = true
     }
     
     func didDisconnect() {
-        print("Disconnected normally.")
-        isConnected = false
+        print("Disconnected.")
     }
     
     func didPrompt() {
@@ -194,26 +205,15 @@ extension Application: WebOSClientDelegate {
     func didReceive(_ result: Result<WebOSResponse, Error>) {
         switch result {
         case .success(let response):
-            if response.id == "volumeSubscription" {
-                print("vol: \(response.payload?.volumeStatus?.volume ?? -1)")
-                return
-            }
-            if response.id == "appSubscription" {
-                print("app: \(response.payload?.appId ?? "nan")")
-                return
-            }
             print(response)
         case .failure(let error):
-            guard isConnected else { return }
-            if let error = error as NSError? {
-                if error.code == 57 || error.code == 60 || error.code == 54 {
-                    let code = (error as NSError?)!.code
-                    print("DISCONNECTED ABNORMALLY. CODE: \(code) RECONNECT SUGGESTED.")
-                    webOSClient.disconnect(error: error)
-                } else {
-                    print("Error received: \(error.localizedDescription).")
-                }
-            }
+            print("Error received: \(error.localizedDescription)")
+        }
+    }
+    
+    func didReceiveNetworkError(_ error: Error?) {
+        if let error = error as NSError? {
+            print("NETWORK ERROR. CODE: \(error.code). RECONNECT.")
         }
     }
 }

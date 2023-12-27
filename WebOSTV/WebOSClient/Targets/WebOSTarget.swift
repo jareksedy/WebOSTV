@@ -39,4 +39,10 @@ enum WebOSTarget {
     case sendEnterKey
     case deleteCharacters(count: Int = 1)
     case getPointerInputSocket
+    // Channels
+    case channelUp
+    case channelDown
+    // Sources
+    case listSources
+    case setSource(inputId: String)
 }

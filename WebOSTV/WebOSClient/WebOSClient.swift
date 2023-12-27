@@ -58,7 +58,15 @@ class WebOSClient: NSObject, WebOSClientProtocol {
         sendURLSessionWebSocketTaskMessage(message, task: secondaryWebSocketTask)
     }
     
-    func disconnect(error: Error? = nil) {
+    func sendPing() {
+        primaryWebSocketTask?.sendPing { [weak self] error in
+            if let error {
+                self?.delegate?.didReceiveNetworkError(error)
+            }
+        }
+    }
+    
+    func disconnect() {
         secondaryWebSocketTask?.cancel(with: .goingAway, reason: nil)
         primaryWebSocketTask?.cancel(with: .goingAway, reason: nil)
     }
@@ -83,7 +91,7 @@ private extension WebOSClient {
     ) {
         task?.send(message) { [weak self] error in
             if let error {
-                self?.delegate?.didReceive(.failure(error))
+                self?.delegate?.didReceiveNetworkError(error)
             }
         }
     }
@@ -92,12 +100,9 @@ private extension WebOSClient {
         _ completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) {
         primaryWebSocketTask?.receive { [weak self] result in
-            switch result {
-            case .success(let response):
+            if case .success(let response) = result {
                 self?.handle(response, completion: completion)
                 self?.listen(completion)
-            case .failure(let error):
-                self?.delegate?.didReceive(.failure(error))
             }
         }
     }
@@ -137,16 +142,6 @@ private extension WebOSClient {
             completion(.success(response))
         }
     }
-    
-//    func handleError(_ error: Error?) {
-//        if let error = error as NSError? {
-//            if error.code == 57 || error.code == 60 || error.code == 54 {
-//                delegate?.didDisconnect(error)
-//            } else {
-//                delegate?.didReceive(.failure(error))
-//            }
-//        }
-//    }
 }
 
 extension WebOSClient: URLSessionWebSocketDelegate {
@@ -172,9 +167,7 @@ extension WebOSClient: URLSessionWebSocketDelegate {
         guard task === primaryWebSocketTask else {
             return
         }
-        if let error {
-            delegate?.didReceive(.failure(error))
-        }
+        delegate?.didReceiveNetworkError(error)
     }
     
     func urlSession(
