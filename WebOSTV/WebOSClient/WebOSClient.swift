@@ -61,9 +61,7 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     func sendPing() {
         primaryWebSocketTask?.sendPing { [weak self] error in
             if let error {
-                DispatchQueue.main.async {
-                    self?.delegate?.didReceiveNetworkError(error)
-                }
+                self?.delegate?.didReceiveNetworkError(error)
             }
         }
     }
@@ -93,9 +91,7 @@ private extension WebOSClient {
     ) {
         task?.send(message) { [weak self] error in
             if let error {
-                DispatchQueue.main.async {
-                    self?.delegate?.didReceiveNetworkError(error)
-                }
+                self?.delegate?.didReceiveNetworkError(error)
             }
         }
     }
@@ -130,17 +126,13 @@ private extension WebOSClient {
             completion(.failure(NSError(domain: errorMessage, code: 0, userInfo: nil)))
         case .registered:
             if let clientKey = response.payload?.clientKey {
-                DispatchQueue.main.async { [weak self] in
-                    self?.delegate?.didRegister(with: clientKey)
-                }
+                delegate?.didRegister(with: clientKey)
                 pointerRequestId = send(.getPointerInputSocket)
             }
             fallthrough
         default:
             if response.payload?.pairingType == .prompt {
-                DispatchQueue.main.async { [weak self] in
-                    self?.delegate?.didPrompt()
-                }
+                delegate?.didPrompt()
             }
             if let socketPath = response.payload?.socketPath,
                let url = URL(string: socketPath),
@@ -161,13 +153,9 @@ extension WebOSClient: URLSessionWebSocketDelegate {
         guard webSocketTask === primaryWebSocketTask else {
             return
         }
-        DispatchQueue.main.async { [weak self] in
-            self?.delegate?.didConnect()
-        }
+        delegate?.didConnect()
         listen { [weak self] result in
-            DispatchQueue.main.async {
-                self?.delegate?.didReceive(result)
-            }
+            self?.delegate?.didReceive(result)
         }
     }
 
@@ -179,9 +167,7 @@ extension WebOSClient: URLSessionWebSocketDelegate {
         guard task === primaryWebSocketTask else {
             return
         }
-        DispatchQueue.main.async { [weak self] in
-            self?.delegate?.didReceiveNetworkError(error)
-        }
+        delegate?.didReceiveNetworkError(error)
     }
     
     func urlSession(
@@ -193,8 +179,6 @@ extension WebOSClient: URLSessionWebSocketDelegate {
         guard webSocketTask === primaryWebSocketTask else {
             return
         }
-        DispatchQueue.main.async { [weak self] in
-            self?.delegate?.didDisconnect()
-        }
+        delegate?.didDisconnect()
     }
 }
