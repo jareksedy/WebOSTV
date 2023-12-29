@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import WebOSClient
 
 class Application {
     var webOSClient: WebOSClientProtocol
@@ -113,7 +114,7 @@ class Application {
             case "send":
                 print("Request: ", terminator: "")
                 if let request = readLine() {
-                    webOSClient.send(request)
+                    webOSClient.send(jsonRequest: request)
                 }
             case "key_click":
                 webOSClient.sendKey(.click)

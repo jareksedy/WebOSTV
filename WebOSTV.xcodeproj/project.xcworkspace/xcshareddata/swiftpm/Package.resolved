@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "webosclient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jareksedy/WebOSClient.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "f1dab8dd4a22b6de0355e7487c940f40942e4c07"
+      }
+    }
+  ],
+  "version" : 2
+}
