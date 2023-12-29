@@ -1,5 +1,5 @@
 //
-//  StringExtension.swift
+//  String+.swift
 //  WebOSTV
 //
 //  Created by Ярослав on 05.12.2023.

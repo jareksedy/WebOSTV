@@ -1,5 +1,5 @@
 //
-//  WebOSClient+.swift
+//  URLSessionDelegate+.swift
 //  WebOSTV
 //
 //  Created by Ярослав on 09.12.2023.

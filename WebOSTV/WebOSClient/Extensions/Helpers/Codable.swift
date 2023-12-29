@@ -1,5 +1,5 @@
 //
-//  CodableExtension.swift
+//  Codable.swift
 //  WebOSTV
 //
 //  Created by Ярослав on 18.12.2023.
