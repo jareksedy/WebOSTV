@@ -32,10 +32,10 @@ class WebOSClient: NSObject, WebOSClientProtocol {
     
     @discardableResult
     func send(_ target: WebOSTarget, id: String) -> String? {
-        guard let json = target.request.jsonWithId(id) else {
+        guard let jsonRequest = target.request.jsonWithId(id) else {
             return nil
         }
-        let message = URLSessionWebSocketTask.Message.string(json)
+        let message = URLSessionWebSocketTask.Message.string(jsonRequest)
         sendURLSessionWebSocketTaskMessage(message, task: primaryWebSocketTask)
         return id
     }
@@ -111,8 +111,8 @@ private extension WebOSClient {
         _ response: URLSessionWebSocketTask.Message,
         completion: @escaping (Result<WebOSResponse, Error>) -> Void
     ) {
-        if case .string(let json) = response {
-            delegate?.didReceive(json)
+        if case .string(let jsonResponse) = response {
+            delegate?.didReceive(jsonResponse)
         }
         guard let response = response.decode(),
               let type = response.type,
